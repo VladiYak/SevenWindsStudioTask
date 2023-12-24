@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.vladiyak.sevenwindsstudiotask.presentation.SignUpFragment"
+        android:name="com.vladiyak.sevenwindsstudiotask.presentation.signup.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" />
 </navigation>

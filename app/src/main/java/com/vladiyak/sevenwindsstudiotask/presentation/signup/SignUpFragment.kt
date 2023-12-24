@@ -1,4 +1,4 @@
-package com.vladiyak.sevenwindsstudiotask.presentation
+package com.vladiyak.sevenwindsstudiotask.presentation.signup
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
