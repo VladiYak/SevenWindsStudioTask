@@ -4,7 +4,7 @@ import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 
 object TokenInstance {
 
-    private lateinit var myToken: Token
+    private var myToken: Token = Token("", 0)
 
     fun addToken(token: Token): Token {
         myToken = token

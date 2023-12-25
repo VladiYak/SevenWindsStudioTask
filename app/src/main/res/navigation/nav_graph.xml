@@ -18,7 +18,11 @@
         android:id="@+id/loginFragment"
         android:name="com.vladiyak.sevenwindsstudiotask.presentation.login.LoginFragment"
         android:label="fragment_login"
-        tools:layout="@layout/fragment_login" />
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_nearbyCoffeeShopsFragment"
+            app:destination="@id/nearbyCoffeeShopsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/nearbyCoffeeShopsFragment"
         android:name="com.vladiyak.sevenwindsstudiotask.presentation.nearbycoffeeshops.NearbyCoffeeShopsFragment"
@@ -27,6 +31,9 @@
         <action
             android:id="@+id/action_nearbyCoffeeShopsFragment_to_mapFragment"
             app:destination="@id/mapFragment" />
+        <action
+            android:id="@+id/action_nearbyCoffeeShopsFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
@@ -37,7 +44,11 @@
         android:id="@+id/menuFragment"
         android:name="com.vladiyak.sevenwindsstudiotask.presentation.menu.MenuFragment"
         android:label="fragment_menu"
-        tools:layout="@layout/fragment_menu" />
+        tools:layout="@layout/fragment_menu" >
+        <action
+            android:id="@+id/action_menuFragment_to_orderDetailsFragment"
+            app:destination="@id/orderDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/orderDetailsFragment"
         android:name="com.vladiyak.sevenwindsstudiotask.presentation.orderdetails.OrderDetailsFragment"
