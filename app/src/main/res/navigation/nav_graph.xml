@@ -29,4 +29,14 @@
         android:name="com.vladiyak.sevenwindsstudiotask.presentation.map.MapFragment"
         android:label="fragment_map"
         tools:layout="@layout/fragment_map" />
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.vladiyak.sevenwindsstudiotask.presentation.menu.MenuFragment"
+        android:label="fragment_menu"
+        tools:layout="@layout/fragment_menu" />
+    <fragment
+        android:id="@+id/orderDetailsFragment"
+        android:name="com.vladiyak.sevenwindsstudiotask.presentation.orderdetails.OrderDetailsFragment"
+        android:label="fragment_order_details"
+        tools:layout="@layout/fragment_order_details" />
 </navigation>
