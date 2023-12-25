@@ -49,6 +49,10 @@ class MenuFragment : Fragment() {
         viewModel.coffeeItem.observe(viewLifecycleOwner, Observer {
             adapterMenu.submitList(it)
         })
+
+        binding.buttonArrowBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun setupRecyclerViews() {

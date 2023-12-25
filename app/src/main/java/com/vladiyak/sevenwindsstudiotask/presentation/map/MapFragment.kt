@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import com.vladiyak.sevenwindsstudiotask.R
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentMapBinding
 import com.yandex.mapkit.Animation
@@ -52,6 +53,14 @@ class MapFragment : Fragment() {
 
         return binding.root
 
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.buttonArrowBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     private fun requestLocationPermission() {
