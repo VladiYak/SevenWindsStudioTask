@@ -1,6 +1,7 @@
 package com.vladiyak.sevenwindsstudiotask.di
 
 import com.vladiyak.sevenwindsstudiotask.data.network.coffeeapi.CoffeeApiService
+import com.vladiyak.sevenwindsstudiotask.data.utils.TokenInstance
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -42,7 +43,7 @@ object AppModule {
     private fun apiKeyAsQuery(chain: Interceptor.Chain) = chain.proceed(
         chain.request()
             .newBuilder()
-            .url(chain.request().url.newBuilder().addQueryParameter("Authorization", "Constants.ApiKeyCoinGecko").build())
+            .url(chain.request().url.newBuilder().addQueryParameter("Authorization", TokenInstance.getToken().token).build())
             .build()
     )
 }

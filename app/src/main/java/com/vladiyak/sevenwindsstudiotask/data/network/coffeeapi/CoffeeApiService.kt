@@ -31,7 +31,6 @@ interface CoffeeApiService {
 
     @POST("auth/login")
     suspend fun login(
-        @Body user: User,
-        @Query("Authorization") token: Token
+        @Body user: User
     ): Token
 }

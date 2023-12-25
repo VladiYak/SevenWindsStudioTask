@@ -23,8 +23,8 @@ class MainRepository @Inject constructor(
         return apiService.signUp(user)
     }
 
-    suspend fun login(user: User, token: Token): Token {
-        return apiService.login(user, token)
+    suspend fun login(user: User): Token {
+        return apiService.login(user)
     }
 
 }
