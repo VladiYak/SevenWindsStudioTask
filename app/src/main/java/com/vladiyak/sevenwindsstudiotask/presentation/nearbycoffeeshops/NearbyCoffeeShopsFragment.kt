@@ -10,13 +10,10 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.vladiyak.sevenwindsstudiotask.R
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationItem
-import com.vladiyak.sevenwindsstudiotask.databinding.FragmentMapBinding
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentNearbyCoffeeShopsBinding
 import com.vladiyak.sevenwindsstudiotask.presentation.nearbycoffeeshops.adapter.CoffeeShopsAdapter
-import com.vladiyak.sevenwindsstudiotask.utils.OnClickListener
-import com.vladiyak.sevenwindsstudiotask.utils.TokenInstance
+import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerLocationItem
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -36,7 +33,7 @@ class NearbyCoffeeShopsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+
         _binding = FragmentNearbyCoffeeShopsBinding.inflate(inflater, container, false)
 
         return binding.root
@@ -62,10 +59,13 @@ class NearbyCoffeeShopsFragment : Fragment() {
 
 
     private fun setupRecyclerViews() {
-        adapterCoffeeShops = CoffeeShopsAdapter(onClickListener = object : OnClickListener {
+        adapterCoffeeShops = CoffeeShopsAdapter(onClickListener = object : OnClickListenerLocationItem {
             override fun onItemClick(coffeeShop: LocationItem) {
                 val action =
-                    NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToMenuFragment()
+                    NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToMenuFragment(
+                        coffeeShop.id.toString(),
+                        args.token
+                    )
                 findNavController().navigate(action)
             }
 

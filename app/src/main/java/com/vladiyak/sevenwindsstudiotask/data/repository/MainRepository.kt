@@ -1,8 +1,7 @@
 package com.vladiyak.sevenwindsstudiotask.data.repository
 
-import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationItem
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationList
-import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
+import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeList
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
 import com.vladiyak.sevenwindsstudiotask.data.network.coffeeapi.CoffeeApiService
@@ -16,8 +15,8 @@ class MainRepository @Inject constructor(
         return apiService.getLocationsList(token)
     }
 
-    suspend fun getLocation(id: String): CoffeeItem {
-        return apiService.getLocationMenu(id)
+    suspend fun getLocationMenu(id: String, token: String): CoffeeList {
+        return apiService.getLocationMenu(id, token)
     }
 
     suspend fun signUp(user: User): Token {

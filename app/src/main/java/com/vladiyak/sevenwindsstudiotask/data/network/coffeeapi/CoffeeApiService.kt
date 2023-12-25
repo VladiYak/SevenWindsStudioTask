@@ -3,6 +3,7 @@ package com.vladiyak.sevenwindsstudiotask.data.network.coffeeapi
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationItem
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationList
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
+import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeList
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
 import retrofit2.http.Body
@@ -23,8 +24,9 @@ interface CoffeeApiService {
 
     @GET("location/{id}/menu")
     suspend fun getLocationMenu(
-        @Path("id") id: String
-    ): CoffeeItem
+        @Path("id") id: String,
+        @Header("Authorization") token: String
+    ): CoffeeList
 
 
     @POST("auth/register")

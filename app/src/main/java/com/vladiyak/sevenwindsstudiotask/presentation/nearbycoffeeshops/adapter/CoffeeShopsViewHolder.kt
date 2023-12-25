@@ -1,18 +1,18 @@
 package com.vladiyak.sevenwindsstudiotask.presentation.nearbycoffeeshops.adapter
 
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationItem
 import com.vladiyak.sevenwindsstudiotask.databinding.CoffeeShopItemRvBinding
-import com.vladiyak.sevenwindsstudiotask.utils.OnClickListener
-import java.util.Locale
+import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerLocationItem
+import dagger.hilt.android.lifecycle.HiltViewModel
+
 
 class CoffeeShopsViewHolder(
     val binding: CoffeeShopItemRvBinding
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: LocationItem, onClickListener: OnClickListener) {
+    fun bind(item: LocationItem, onClickListener: OnClickListenerLocationItem) {
         binding.apply {
             itemLayout.setOnClickListener {
                 onClickListener.onItemClick(item)
