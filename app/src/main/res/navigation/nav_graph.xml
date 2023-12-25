@@ -3,13 +3,17 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/nearbyCoffeeShopsFragment">
+    app:startDestination="@id/signUpFragment">
 
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.vladiyak.sevenwindsstudiotask.presentation.signup.SignUpFragment"
         android:label="fragment_sign_up"
-        tools:layout="@layout/fragment_sign_up" />
+        tools:layout="@layout/fragment_sign_up" >
+        <action
+            android:id="@+id/action_signUpFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.vladiyak.sevenwindsstudiotask.presentation.login.LoginFragment"
