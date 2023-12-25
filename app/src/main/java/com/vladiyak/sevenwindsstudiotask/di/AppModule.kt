@@ -1,7 +1,7 @@
 package com.vladiyak.sevenwindsstudiotask.di
 
 import com.vladiyak.sevenwindsstudiotask.data.network.coffeeapi.CoffeeApiService
-import com.vladiyak.sevenwindsstudiotask.data.utils.TokenInstance
+import com.vladiyak.sevenwindsstudiotask.utils.TokenInstance
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,7 +36,7 @@ object AppModule {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .addInterceptor { apiKeyAsQuery(it) }
+//            .addInterceptor { apiKeyAsQuery(it) }
             .build()
     }
 

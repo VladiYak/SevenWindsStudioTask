@@ -2,12 +2,12 @@ package com.vladiyak.sevenwindsstudiotask.data.network.coffeeapi
 
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationItem
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationList
+import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
 import retrofit2.http.Body
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
 import retrofit2.http.GET
+import retrofit2.http.Header
 import retrofit2.http.Headers
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -15,13 +15,16 @@ import retrofit2.http.Query
 
 interface CoffeeApiService {
 
+
     @GET("locations")
-    suspend fun getLocationsList(): LocationList
+    suspend fun getLocationsList(
+        @Header("Authorization") token: String
+    ): LocationList
 
     @GET("location/{id}/menu")
-    suspend fun getLocation(
+    suspend fun getLocationMenu(
         @Path("id") id: String
-    ): LocationItem
+    ): CoffeeItem
 
 
     @POST("auth/register")
