@@ -5,6 +5,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -34,7 +35,14 @@ object AppModule {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-//            .addInterceptor { apiKeyAsQuery(it) }
+            .addInterceptor { apiKeyAsQuery(it) }
             .build()
     }
+
+    private fun apiKeyAsQuery(chain: Interceptor.Chain) = chain.proceed(
+        chain.request()
+            .newBuilder()
+            .url(chain.request().url.newBuilder().addQueryParameter("Authorization", "Constants.ApiKeyCoinGecko").build())
+            .build()
+    )
 }
