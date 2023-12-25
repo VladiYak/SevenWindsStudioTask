@@ -1,4 +1,4 @@
-package com.vladiyak.sevenwindsstudiotask.data.utils
+package com.vladiyak.sevenwindsstudiotask.utils
 
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 

@@ -34,6 +34,9 @@
         <action
             android:id="@+id/action_nearbyCoffeeShopsFragment_to_menuFragment"
             app:destination="@id/menuFragment" />
+        <argument
+            android:name="token"
+            app:argType="com.vladiyak.sevenwindsstudiotask.data.models.signup.Token" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"

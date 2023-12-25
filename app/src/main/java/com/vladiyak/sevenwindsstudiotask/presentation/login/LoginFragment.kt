@@ -13,7 +13,7 @@ import com.google.android.gms.common.internal.safeparcel.SafeParcelable
 import com.vladiyak.sevenwindsstudiotask.R
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
-import com.vladiyak.sevenwindsstudiotask.data.utils.TokenInstance
+import com.vladiyak.sevenwindsstudiotask.utils.TokenInstance
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentLoginBinding
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentSignUpBinding
 import com.vladiyak.sevenwindsstudiotask.presentation.signup.SignUpFragment
@@ -53,7 +53,10 @@ class LoginFragment : Fragment() {
 
             viewModel.token.observe(viewLifecycleOwner, Observer {
                 if (it != null) {
-                    val action = LoginFragmentDirections.actionLoginFragmentToNearbyCoffeeShopsFragment()
+                    val action =
+                        LoginFragmentDirections.actionLoginFragmentToNearbyCoffeeShopsFragment(
+                            it
+                        )
                     findNavController().navigate(action)
                 }
             })

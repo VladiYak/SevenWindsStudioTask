@@ -10,7 +10,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
-import com.vladiyak.sevenwindsstudiotask.data.utils.TokenInstance
+import com.vladiyak.sevenwindsstudiotask.utils.TokenInstance
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentSignUpBinding
 import dagger.hilt.android.AndroidEntryPoint
 

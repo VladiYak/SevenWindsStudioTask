@@ -1,4 +1,4 @@
-package com.vladiyak.sevenwindsstudiotask.data.utils
+package com.vladiyak.sevenwindsstudiotask.utils
 
 sealed class Resource<T>(val data: T? = null, val message: String? = null) {
     class Success<T>(data: T) : Resource<T>(data = data)
