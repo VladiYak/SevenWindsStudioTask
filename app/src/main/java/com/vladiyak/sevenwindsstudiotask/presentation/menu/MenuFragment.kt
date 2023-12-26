@@ -43,7 +43,8 @@ class MenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getCoffeeItem(args.id, "Bearer ${args.token.token}")
+        viewModel.getCoffeeItem(args.id)
+
 
         setupRecyclerViews()
 
@@ -60,14 +61,9 @@ class MenuFragment : Fragment() {
                 adapterMenu.notifyItemChanged(correctId(it) - 1, Unit)
             }
 
-            Log.d("AdapterTest", "${adapterMenu.currentList}")
-
             val list = adapterMenu.currentList.toMutableList().filter {
                 it.quantity > 0
             }
-
-            Log.d("ListTest", "$list")
-
 
             binding.buttonPay.setOnClickListener {
                 val action = MenuFragmentDirections.actionMenuFragmentToOrderDetailsFragment(

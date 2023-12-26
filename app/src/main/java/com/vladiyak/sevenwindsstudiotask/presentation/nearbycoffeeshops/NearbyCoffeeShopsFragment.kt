@@ -26,7 +26,6 @@ class NearbyCoffeeShopsFragment : Fragment() {
 
     private val viewModel: NearbyCoffeeShopsViewModel by viewModels()
     private lateinit var adapterCoffeeShops: CoffeeShopsAdapter
-    private val args: NearbyCoffeeShopsFragmentArgs by navArgs()
 
 
     override fun onCreateView(
@@ -35,14 +34,13 @@ class NearbyCoffeeShopsFragment : Fragment() {
     ): View? {
 
         _binding = FragmentNearbyCoffeeShopsBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getCoffeeShops("Bearer ${args.token.token}")
+        viewModel.getCoffeeShops()
 
         setupRecyclerViews()
 
@@ -57,20 +55,17 @@ class NearbyCoffeeShopsFragment : Fragment() {
         }
     }
 
-
     private fun setupRecyclerViews() {
-        adapterCoffeeShops = CoffeeShopsAdapter(onClickListener = object : OnClickListenerLocationItem {
-            override fun onItemClick(coffeeShop: LocationItem) {
-                val action =
-                    NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToMenuFragment(
-                        coffeeShop.id.toString(),
-                        args.token
-                    )
-                findNavController().navigate(action)
-            }
-
-
-        })
+        adapterCoffeeShops =
+            CoffeeShopsAdapter(onClickListener = object : OnClickListenerLocationItem {
+                override fun onItemClick(coffeeShop: LocationItem) {
+                    val action =
+                        NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToMenuFragment(
+                            coffeeShop.id.toString()
+                        )
+                    findNavController().navigate(action)
+                }
+            })
         binding.coffeeShopsRv.adapter = adapterCoffeeShops
         binding.coffeeShopsRv.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)

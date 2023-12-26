@@ -11,12 +11,12 @@ class MainRepository @Inject constructor(
     private val apiService: CoffeeApiService
 ) {
 
-    suspend fun getLocations(token: String): LocationList {
-        return apiService.getLocationsList(token)
+    suspend fun getLocations(): LocationList {
+        return apiService.getLocationsList()
     }
 
-    suspend fun getLocationMenu(id: String, token: String): CoffeeList {
-        return apiService.getLocationMenu(id, token)
+    suspend fun getLocationMenu(id: String): CoffeeList {
+        return apiService.getLocationMenu(id)
     }
 
     suspend fun signUp(user: User): Token {

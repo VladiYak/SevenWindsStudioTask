@@ -7,6 +7,7 @@ import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.databinding.OrderItemRvBinding
 import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerMinusButton
 import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerPlusButton
+import com.vladiyak.sevenwindsstudiotask.utils.addSuffix
 
 class OrderDetailsViewHolder(
     val binding: OrderItemRvBinding
@@ -20,7 +21,7 @@ class OrderDetailsViewHolder(
                 onClickListenerMinusButton.onItemClick(item)
             }
             coffeeName.text = item.name
-            price.text = item.price.toString()
+            price.text = item.price.toString().addSuffix(" руб")
             count.text = item.quantity.toString()
         }
     }

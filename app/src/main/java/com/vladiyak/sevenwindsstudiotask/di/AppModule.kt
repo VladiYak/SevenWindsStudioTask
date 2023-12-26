@@ -36,14 +36,14 @@ object AppModule {
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-//            .addInterceptor { apiKeyAsQuery(it) }
+            .addInterceptor { apiKeyAsQuery(it) }
             .build()
     }
 
     private fun apiKeyAsQuery(chain: Interceptor.Chain) = chain.proceed(
         chain.request()
             .newBuilder()
-            .url(chain.request().url.newBuilder().addQueryParameter("Authorization", TokenInstance.getToken().token).build())
+            .addHeader("Authorization", "Bearer ${TokenInstance.getToken().token}")
             .build()
     )
 }

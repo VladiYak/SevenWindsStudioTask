@@ -127,7 +127,7 @@
             android:id="@+id/sign_up_token"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Token"
+            android:text="Вход"
             style="@style/TextAppearance.Material3.TitleLarge"
             android:textColor="#F6E5D1"
             android:textSize="18sp"

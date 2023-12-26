@@ -19,13 +19,13 @@ interface CoffeeApiService {
 
     @GET("locations")
     suspend fun getLocationsList(
-        @Header("Authorization") token: String
+//        @Header("Authorization") token: String
     ): LocationList
 
     @GET("location/{id}/menu")
     suspend fun getLocationMenu(
         @Path("id") id: String,
-        @Header("Authorization") token: String
+//        @Header("Authorization") token: String
     ): CoffeeList
 
 

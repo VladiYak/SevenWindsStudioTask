@@ -22,12 +22,10 @@ class NearbyCoffeeShopsViewModel @Inject constructor(
     val coffeeShop: LiveData<LocationList> = _coffeeShop
 
 
-
-
     @SuppressLint("SuspiciousIndentation")
-    fun getCoffeeShops(token: String) {
+    fun getCoffeeShops() {
         viewModelScope.launch {
-            val coffeeShops = repository.getLocations(token)
+            val coffeeShops = repository.getLocations()
                 _coffeeShop.postValue(coffeeShops)
         }
 
