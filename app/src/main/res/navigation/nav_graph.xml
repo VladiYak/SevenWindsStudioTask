@@ -54,9 +54,6 @@
         <argument
             android:name="id"
             app:argType="string" />
-        <argument
-            android:name="token"
-            app:argType="com.vladiyak.sevenwindsstudiotask.data.models.signup.Token" />
     </fragment>
     <fragment
         android:id="@+id/orderDetailsFragment"

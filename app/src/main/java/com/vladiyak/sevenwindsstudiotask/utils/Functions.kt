@@ -12,3 +12,5 @@ fun correctId(item: CoffeeItem): Int {
     }
     return item.id
 }
+
+fun String.addSuffix(value: String) = this + value

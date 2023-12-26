@@ -52,6 +52,7 @@ class LoginFragment : Fragment() {
             viewModel.login(user)
 
             viewModel.token.observe(viewLifecycleOwner, Observer {
+                token.addToken(it)
                 if (it != null) {
                     val action =
                         LoginFragmentDirections.actionLoginFragmentToNearbyCoffeeShopsFragment(

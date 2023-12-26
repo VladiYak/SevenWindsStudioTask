@@ -21,9 +21,9 @@ class MenuViewModel @Inject constructor(
     private val _coffeeItem = MutableLiveData<MutableList<CoffeeItem>>()
     val coffeeItem: LiveData<MutableList<CoffeeItem>> = _coffeeItem
 
-    fun getCoffeeItem(id: String, token: String) {
+    fun getCoffeeItem(id: String) {
         viewModelScope.launch {
-            val coffeeItem = repository.getLocationMenu(id, token)
+            val coffeeItem = repository.getLocationMenu(id)
             _coffeeItem.postValue(coffeeItem)
         }
     }
