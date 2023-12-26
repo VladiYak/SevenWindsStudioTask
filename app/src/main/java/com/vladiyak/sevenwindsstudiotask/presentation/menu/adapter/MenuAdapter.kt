@@ -6,9 +6,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerCoffeeItem
 
-class MenuAdapter(
-    private val onClickListener: OnClickListenerCoffeeItem
-) : ListAdapter<CoffeeItem, MenuViewHolder>(DiffCallBack) {
+class MenuAdapter() : ListAdapter<CoffeeItem, MenuViewHolder>(DiffCallBack) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
         return MenuViewHolder.from(parent)
     }
@@ -16,7 +14,7 @@ class MenuAdapter(
     override fun onBindViewHolder(holder: MenuViewHolder, position: Int) {
         val item = getItem(position)
 
-        holder.bind(item, onClickListener)
+        holder.bind(item)
 
         holder.binding.plusButton.setOnClickListener {
             onPlusClick?.invoke(item)

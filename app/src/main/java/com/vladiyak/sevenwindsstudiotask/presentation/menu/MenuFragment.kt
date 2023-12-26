@@ -1,5 +1,6 @@
 package com.vladiyak.sevenwindsstudiotask.presentation.menu
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -16,6 +17,7 @@ import com.vladiyak.sevenwindsstudiotask.databinding.FragmentMenuBinding
 import com.vladiyak.sevenwindsstudiotask.presentation.menu.adapter.MenuAdapter
 import com.vladiyak.sevenwindsstudiotask.presentation.nearbycoffeeshops.NearbyCoffeeShopsFragmentArgs
 import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerCoffeeItem
+import com.vladiyak.sevenwindsstudiotask.utils.correctId
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -40,6 +42,7 @@ class MenuFragment : Fragment() {
         return binding.root
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -48,13 +51,15 @@ class MenuFragment : Fragment() {
         setupRecyclerViews()
 
         viewModel.coffeeItem.observe(viewLifecycleOwner, Observer { coffeeList ->
-            adapterMenu.submitList(coffeeList)
+            adapterMenu.submitList(coffeeList.toMutableList())
             adapterMenu.onPlusClick = {
                 viewModel.increaseQuantity(coffeeList, it)
+                adapterMenu.notifyItemChanged(correctId(it) - 1)
             }
             adapterMenu.onMinusClick = {
                 if (it.quantity > 0)
                 viewModel.decreaseQuantity(coffeeList, it)
+                adapterMenu.notifyItemChanged(correctId(it) - 1)
             }
 
             Log.d("AdapterTest", "${adapterMenu.currentList}")
@@ -67,7 +72,10 @@ class MenuFragment : Fragment() {
 
 
             binding.buttonPay.setOnClickListener {
-
+                val action = MenuFragmentDirections.actionMenuFragmentToOrderDetailsFragment(
+                    list.toTypedArray()
+                )
+                findNavController().navigate(action)
             }
         })
 
@@ -78,13 +86,7 @@ class MenuFragment : Fragment() {
     }
 
     private fun setupRecyclerViews() {
-        adapterMenu = MenuAdapter(onClickListener = object : OnClickListenerCoffeeItem {
-            override fun onItemClick(coffeeItem: CoffeeItem) {
-                val action =
-                    MenuFragmentDirections.actionMenuFragmentToOrderDetailsFragment()
-                findNavController().navigate(action)
-            }
-        })
+        adapterMenu = MenuAdapter()
         binding.menuRv.adapter = adapterMenu
         binding.menuRv.layoutManager =
             GridLayoutManager(requireContext(), 2)

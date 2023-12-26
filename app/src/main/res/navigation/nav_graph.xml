@@ -62,5 +62,9 @@
         android:id="@+id/orderDetailsFragment"
         android:name="com.vladiyak.sevenwindsstudiotask.presentation.orderdetails.OrderDetailsFragment"
         android:label="fragment_order_details"
-        tools:layout="@layout/fragment_order_details" />
+        tools:layout="@layout/fragment_order_details" >
+        <argument
+            android:name="cartitems"
+            app:argType="com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem[]" />
+    </fragment>
 </navigation>

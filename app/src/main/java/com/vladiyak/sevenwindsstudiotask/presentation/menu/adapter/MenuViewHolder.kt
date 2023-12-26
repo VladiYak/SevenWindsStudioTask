@@ -11,12 +11,8 @@ import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerCoffeeItem
 class MenuViewHolder(
     val binding: MenuItemRvBinding
 ) : RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: CoffeeItem, onClickListener: OnClickListenerCoffeeItem) {
+    fun bind(item: CoffeeItem) {
         binding.apply {
-            materialCardCoffeeItem.setOnClickListener {
-                onClickListener.onItemClick(item)
-            }
-
             Glide.with(itemView).load(item.imageURL)
                 .into(imageCoffee)
             count.text = item.quantity.toString()
