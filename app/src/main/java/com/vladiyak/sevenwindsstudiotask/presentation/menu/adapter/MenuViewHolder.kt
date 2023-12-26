@@ -19,6 +19,7 @@ class MenuViewHolder(
 
             Glide.with(itemView).load(item.imageURL)
                 .into(imageCoffee)
+            count.text = item.quantity.toString()
             coffeeText.text = item.name
             price.text = item.price.toString()
         }

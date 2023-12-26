@@ -1,6 +1,7 @@
 package com.vladiyak.sevenwindsstudiotask.presentation.menu
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -46,9 +47,30 @@ class MenuFragment : Fragment() {
 
         setupRecyclerViews()
 
-        viewModel.coffeeItem.observe(viewLifecycleOwner, Observer {
-            adapterMenu.submitList(it)
+        viewModel.coffeeItem.observe(viewLifecycleOwner, Observer { coffeeList ->
+            adapterMenu.submitList(coffeeList)
+            adapterMenu.onPlusClick = {
+                viewModel.increaseQuantity(coffeeList, it)
+            }
+            adapterMenu.onMinusClick = {
+                if (it.quantity > 0)
+                viewModel.decreaseQuantity(coffeeList, it)
+            }
+
+            Log.d("AdapterTest", "${adapterMenu.currentList}")
+
+            val list = adapterMenu.currentList.toMutableList().filter {
+                it.quantity > 0
+            }
+
+            Log.d("ListTest", "$list")
+
+
+            binding.buttonPay.setOnClickListener {
+
+            }
         })
+
 
         binding.buttonArrowBack.setOnClickListener {
             findNavController().navigateUp()

@@ -17,6 +17,13 @@ class MenuAdapter(
         val item = getItem(position)
 
         holder.bind(item, onClickListener)
+
+        holder.binding.plusButton.setOnClickListener {
+            onPlusClick?.invoke(item)
+        }
+        holder.binding.minusButton.setOnClickListener {
+            onMinusClick?.invoke(item)
+        }
     }
 
     companion object DiffCallBack : DiffUtil.ItemCallback<CoffeeItem>() {
@@ -29,4 +36,7 @@ class MenuAdapter(
         }
 
     }
+
+    var onPlusClick: ((CoffeeItem) -> Unit)? = null
+    var onMinusClick: ((CoffeeItem) -> Unit)? = null
 }
