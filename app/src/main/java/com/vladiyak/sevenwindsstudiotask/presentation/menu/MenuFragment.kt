@@ -12,11 +12,8 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
-import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentMenuBinding
 import com.vladiyak.sevenwindsstudiotask.presentation.menu.adapter.MenuAdapter
-import com.vladiyak.sevenwindsstudiotask.presentation.nearbycoffeeshops.NearbyCoffeeShopsFragmentArgs
-import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerCoffeeItem
 import com.vladiyak.sevenwindsstudiotask.utils.correctId
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -54,12 +51,13 @@ class MenuFragment : Fragment() {
             adapterMenu.submitList(coffeeList.toMutableList())
             adapterMenu.onPlusClick = {
                 viewModel.increaseQuantity(coffeeList, it)
-                adapterMenu.notifyItemChanged(correctId(it) - 1)
+                adapterMenu.notifyItemChanged(correctId(it) - 1, Unit)
+
             }
             adapterMenu.onMinusClick = {
                 if (it.quantity > 0)
                 viewModel.decreaseQuantity(coffeeList, it)
-                adapterMenu.notifyItemChanged(correctId(it) - 1)
+                adapterMenu.notifyItemChanged(correctId(it) - 1, Unit)
             }
 
             Log.d("AdapterTest", "${adapterMenu.currentList}")

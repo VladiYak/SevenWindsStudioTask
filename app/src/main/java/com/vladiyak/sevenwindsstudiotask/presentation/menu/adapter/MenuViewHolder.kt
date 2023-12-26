@@ -6,7 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.databinding.MenuItemRvBinding
-import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerCoffeeItem
 
 class MenuViewHolder(
     val binding: MenuItemRvBinding

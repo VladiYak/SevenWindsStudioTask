@@ -4,7 +4,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
-import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerCoffeeItem
 
 class MenuAdapter() : ListAdapter<CoffeeItem, MenuViewHolder>(DiffCallBack) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MenuViewHolder {
