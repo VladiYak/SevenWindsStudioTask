@@ -24,6 +24,7 @@ class MenuViewModel @Inject constructor(
 
     fun getCoffeeItem(id: String) {
         viewModelScope.launch {
+            _coffeeItem.postValue(Resource.Loading())
             val coffeeItem = repository.getLocationMenu(id)
             if (coffeeItem.isSuccessful) {
                 _coffeeItem.postValue(

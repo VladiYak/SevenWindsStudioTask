@@ -60,6 +60,7 @@ class NearbyCoffeeShopsFragment : Fragment() {
         viewModel.coffeeShop.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Success -> {
+                    binding.progressBar.visibility = View.GONE
                     adapterCoffeeShops.submitList(response.data)
                     val pointList =
                         mutableListOf<Point>()
@@ -95,10 +96,11 @@ class NearbyCoffeeShopsFragment : Fragment() {
                 }
 
                 is Resource.Loading -> {
-
+                    binding.progressBar.visibility = View.VISIBLE
                 }
 
                 is Resource.Error -> {
+                    binding.progressBar.visibility = View.GONE
                     Snackbar.make(view, "Error", Snackbar.LENGTH_SHORT).show()
                 }
 

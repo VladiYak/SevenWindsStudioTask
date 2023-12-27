@@ -53,6 +53,7 @@ class MenuFragment : Fragment() {
         viewModel.coffeeItem.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Success -> {
+                    binding.progressBar.visibility = View.GONE
                     adapterMenu.submitList(response.data)
                     adapterMenu.onPlusClick = {
                         response.data?.let { list -> viewModel.increaseQuantity(list, it) }
@@ -79,10 +80,11 @@ class MenuFragment : Fragment() {
                 }
 
                 is Resource.Loading -> {
-
+                    binding.progressBar.visibility = View.VISIBLE
                 }
 
                 is Resource.Error -> {
+                    binding.progressBar.visibility = View.GONE
                     Snackbar.make(view, "Error!", Snackbar.LENGTH_SHORT).show()
                 }
             }

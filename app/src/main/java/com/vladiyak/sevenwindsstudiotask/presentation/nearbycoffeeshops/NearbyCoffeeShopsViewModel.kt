@@ -29,6 +29,7 @@ class NearbyCoffeeShopsViewModel @Inject constructor(
     @SuppressLint("SuspiciousIndentation")
     fun getCoffeeShops() {
         viewModelScope.launch {
+            _coffeeShop.postValue(Resource.Loading())
             val coffeeShops = repository.getLocations()
             if (coffeeShops.isSuccessful) {
                 _coffeeShop.postValue(coffeeShops.body()?.let { Resource.Success(it.toMutableList()) })
