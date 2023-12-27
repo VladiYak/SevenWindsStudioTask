@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
 import com.vladiyak.sevenwindsstudiotask.utils.TokenInstance
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentSignUpBinding
+import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -43,8 +45,19 @@ class SignUpFragment : Fragment() {
             viewModel.signUp(user)
         }
 
-        viewModel.token.observe(viewLifecycleOwner, Observer {
-            tokenInstance.addToken(it)
+        viewModel.token.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                is Resource.Success -> {
+                    tokenInstance.addToken(response.data)
+                    Snackbar.make(view, "Success!", Snackbar.LENGTH_SHORT).show()
+                }
+                is Resource.Loading -> {
+
+                }
+                is Resource.Error -> {
+                    Snackbar.make(view, "Failed to sign up!", Snackbar.LENGTH_SHORT).show()
+                }
+            }
         })
 
         binding.signUpToken.setOnClickListener {

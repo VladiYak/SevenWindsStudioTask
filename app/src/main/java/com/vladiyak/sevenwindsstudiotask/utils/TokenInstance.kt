@@ -4,14 +4,14 @@ import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 
 object TokenInstance {
 
-    private var myToken: Token = Token("", 0)
+    private var myToken: Token? = Token("", 0)
 
-    fun addToken(token: Token): Token {
+    fun addToken(token: Token?): Token? {
         myToken = token
         return myToken
     }
 
-    fun getToken(): Token {
+    fun getToken(): Token? {
         return myToken
     }
 }
