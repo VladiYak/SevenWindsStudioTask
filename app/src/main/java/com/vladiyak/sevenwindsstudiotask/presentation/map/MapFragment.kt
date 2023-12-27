@@ -12,8 +12,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import com.vladiyak.sevenwindsstudiotask.R
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentMapBinding
+import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
@@ -42,7 +44,6 @@ class MapFragment : Fragment() {
     private val placeMarkList = mutableListOf<PlacemarkMapObject>()
 
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -64,70 +65,93 @@ class MapFragment : Fragment() {
         userLocation.isHeadingEnabled = true
         userLocation.isAutoZoomEnabled = true
 
-        viewModel.locations.observe(viewLifecycleOwner, Observer { locationList ->
-            startPoint = Point(
-                locationList[1].point.latitude.toDouble(),
-                locationList[1].point.longitude.toDouble()
-            )
-            binding.mapView.map
-                .move(
-                    CameraPosition(
-                        startPoint, 9f, 0.0f, 0.0f
-                    ),
-                    Animation(Animation.Type.SMOOTH, 2f),
-                    null
-                )
+        viewModel.locations.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                is Resource.Success -> {
+                    val data = response.data
+                    startPoint = Point(
+                        response.data?.get(1)?.point?.latitude?.toDouble() ?: 0.0,
+                        response.data?.get(1)?.point?.longitude?.toDouble() ?: 0.0
+                    )
+                    binding.mapView.map
+                        .move(
+                            CameraPosition(
+                                startPoint, 9f, 0.0f, 0.0f
+                            ),
+                            Animation(Animation.Type.SMOOTH, 2f),
+                            null
+                        )
 
-            val pointList =
-                mutableListOf<Point>()
-            locationList.map {
-                pointList.add(Point(it.point.latitude.toDouble(), it.point.longitude.toDouble()))
+                    val pointList =
+                        mutableListOf<Point>()
+                    response.data?.map {
+                        pointList.add(
+                            Point(
+                                it.point.latitude.toDouble(),
+                                it.point.longitude.toDouble()
+                            )
+                        )
+                    }
+
+                    binding.mapView.map.mapObjects.addPlacemarks(
+                        pointList,
+                        ImageProvider.fromResource(context, R.drawable.marker),
+                        IconStyle()
+                    ).forEach {
+                        placeMarkList.add(it)
+                    }
+
+                    response.data?.get(0)?.let {
+                        placeMarkList[0].setText(
+                            it.name,
+                            TextStyle(
+                                12f,
+                                R.color.textColor,
+                                R.color.textColor,
+                                TextStyle.Placement.BOTTOM,
+                                0.0f,
+                                true,
+                                false
+                            )
+                        )
+                    }
+                    response.data?.get(1)?.let {
+                        placeMarkList[1].setText(
+                            it.name,
+                            TextStyle(
+                                12f,
+                                R.color.textColor,
+                                R.color.textColor,
+                                TextStyle.Placement.BOTTOM,
+                                0.0f,
+                                true,
+                                false
+                            )
+                        )
+                    }
+                    response.data?.get(2)?.let {
+                        placeMarkList[2].setText(
+                            it.name,
+                            TextStyle(
+                                12f,
+                                R.color.textColor,
+                                R.color.textColor,
+                                TextStyle.Placement.BOTTOM,
+                                0.0f,
+                                true,
+                                false
+                            )
+                        )
+                    }
+                }
+                is Resource.Loading -> {
+
+                }
+                is Resource.Error -> {
+                    Snackbar.make(view, "Error!", Snackbar.LENGTH_SHORT).show()
+                }
             }
 
-            binding.mapView.map.mapObjects.addPlacemarks(
-                pointList,
-                ImageProvider.fromResource(context, R.drawable.marker),
-                IconStyle()
-            ).forEach {
-                placeMarkList.add(it)
-            }
-
-            placeMarkList[0].setText(
-                locationList[0].name,
-                TextStyle(
-                    12f,
-                    R.color.textColor,
-                    R.color.textColor,
-                    TextStyle.Placement.BOTTOM,
-                    0.0f,
-                    true,
-                    false
-                )
-            )
-            placeMarkList[1].setText(
-                locationList[1].name,
-                TextStyle(
-                    12f,
-                    R.color.textColor,
-                    R.color.textColor,
-                    TextStyle.Placement.BOTTOM,
-                    0.0f,
-                    true,
-                    false
-                )
-            )
-            placeMarkList[2].setText(
-                locationList[2].name,
-                TextStyle(
-                    12f,
-                    R.color.textColor,
-                    R.color.textColor,
-                    TextStyle.Placement.BOTTOM,
-                    0.0f,
-                    true,
-                    false
-                )
-            )
         })
 
         binding.buttonArrowBack.setOnClickListener {

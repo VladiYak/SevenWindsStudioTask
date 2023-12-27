@@ -19,12 +19,12 @@ interface CoffeeApiService {
 
 
     @GET("locations")
-    suspend fun getLocationsList(): LocationList
+    suspend fun getLocationsList(): Response<LocationList>
 
     @GET("location/{id}/menu")
     suspend fun getLocationMenu(
         @Path("id") id: String
-    ): CoffeeList
+    ): Response<CoffeeList>
 
 
     @POST("auth/register")

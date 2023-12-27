@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationList
 import com.vladiyak.sevenwindsstudiotask.data.repository.MainRepository
+import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -16,15 +17,19 @@ class MapViewModel @Inject constructor(
     private val repository: MainRepository
 ): ViewModel() {
 
-    private val _locations = MutableLiveData<LocationList>()
-    val locations: LiveData<LocationList> = _locations
+    private val _locations = MutableLiveData<Resource<LocationList>>()
+    val locations: LiveData<Resource<LocationList>> = _locations
 
 
     @SuppressLint("SuspiciousIndentation")
     fun getLocations() {
         viewModelScope.launch {
             val coffeeShops = repository.getLocations()
-            _locations.postValue(coffeeShops)
+            if (coffeeShops.isSuccessful) {
+                _locations.postValue(coffeeShops.body()?.let { Resource.Success(it) })
+            } else {
+                _locations.postValue(Resource.Error(coffeeShops.errorBody().toString()))
+            }
         }
 
     }

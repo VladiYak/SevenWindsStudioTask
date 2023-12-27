@@ -12,8 +12,10 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
+import com.google.android.material.snackbar.Snackbar
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentMenuBinding
 import com.vladiyak.sevenwindsstudiotask.presentation.menu.adapter.MenuAdapter
+import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import com.vladiyak.sevenwindsstudiotask.utils.correctId
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -48,29 +50,44 @@ class MenuFragment : Fragment() {
 
         setupRecyclerViews()
 
-        viewModel.coffeeItem.observe(viewLifecycleOwner, Observer { coffeeList ->
-            adapterMenu.submitList(coffeeList.toMutableList())
-            adapterMenu.onPlusClick = {
-                viewModel.increaseQuantity(coffeeList, it)
-                adapterMenu.notifyItemChanged(correctId(it) - 1, Unit)
+        viewModel.coffeeItem.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                is Resource.Success -> {
+                    adapterMenu.submitList(response.data)
+                    adapterMenu.onPlusClick = {
+                        response.data?.let { list -> viewModel.increaseQuantity(list, it) }
+                        adapterMenu.notifyItemChanged(correctId(it) - 1, Unit)
 
-            }
-            adapterMenu.onMinusClick = {
-                if (it.quantity > 0)
-                viewModel.decreaseQuantity(coffeeList, it)
-                adapterMenu.notifyItemChanged(correctId(it) - 1, Unit)
+                    }
+                    adapterMenu.onMinusClick = {
+                        if (it.quantity > 0)
+                            response.data?.let { list -> viewModel.decreaseQuantity(list, it) }
+                        adapterMenu.notifyItemChanged(correctId(it) - 1, Unit)
+                    }
+
+                    val list = adapterMenu.currentList.toMutableList().filter {
+                        it.quantity > 0
+                    }
+
+                    binding.buttonPay.setOnClickListener {
+                        val action =
+                            MenuFragmentDirections.actionMenuFragmentToOrderDetailsFragment(
+                                list.toTypedArray()
+                            )
+                        findNavController().navigate(action)
+                    }
+                }
+
+                is Resource.Loading -> {
+
+                }
+
+                is Resource.Error -> {
+                    Snackbar.make(view, "Error!", Snackbar.LENGTH_SHORT).show()
+                }
             }
 
-            val list = adapterMenu.currentList.toMutableList().filter {
-                it.quantity > 0
-            }
 
-            binding.buttonPay.setOnClickListener {
-                val action = MenuFragmentDirections.actionMenuFragmentToOrderDetailsFragment(
-                    list.toTypedArray()
-                )
-                findNavController().navigate(action)
-            }
         })
 
 
