@@ -6,6 +6,7 @@ import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeList
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -18,21 +19,21 @@ interface CoffeeApiService {
 
 
     @GET("locations")
-    suspend fun getLocationsList(): LocationList
+    suspend fun getLocationsList(): Response<LocationList>
 
     @GET("location/{id}/menu")
     suspend fun getLocationMenu(
         @Path("id") id: String
-    ): CoffeeList
+    ): Response<CoffeeList>
 
 
     @POST("auth/register")
     suspend fun signUp(
         @Body user: User
-    ): Token
+    ): Response<Token>
 
     @POST("auth/login")
     suspend fun login(
         @Body user: User
-    ): Token
+    ): Response<Token>
 }

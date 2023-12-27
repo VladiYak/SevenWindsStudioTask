@@ -43,7 +43,7 @@ object AppModule {
     private fun apiKeyAsQuery(chain: Interceptor.Chain) = chain.proceed(
         chain.request()
             .newBuilder()
-            .addHeader("Authorization", "Bearer ${TokenInstance.getToken().token}")
+            .addHeader("Authorization", "Bearer ${TokenInstance.getToken()?.token}")
             .build()
     )
 }

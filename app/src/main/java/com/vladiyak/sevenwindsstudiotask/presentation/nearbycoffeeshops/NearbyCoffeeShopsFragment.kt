@@ -15,10 +15,12 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.material.snackbar.Snackbar
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationItem
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentNearbyCoffeeShopsBinding
 import com.vladiyak.sevenwindsstudiotask.presentation.nearbycoffeeshops.adapter.CoffeeShopsAdapter
 import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerLocationItem
+import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import com.yandex.mapkit.geometry.Geo
 import com.yandex.mapkit.geometry.Point
 import dagger.hilt.android.AndroidEntryPoint
@@ -55,34 +57,55 @@ class NearbyCoffeeShopsFragment : Fragment() {
         viewModel.getCoffeeShops()
         setupRecyclerViews()
 
-        viewModel.coffeeShop.observe(viewLifecycleOwner, Observer { locationList ->
-            adapterCoffeeShops.submitList(locationList.toList())
-            val pointList =
-                mutableListOf<Point>()
-            locationList.map {
-                pointList.add(Point(it.point.latitude.toDouble(), it.point.longitude.toDouble()))
+        viewModel.coffeeShop.observe(viewLifecycleOwner, Observer { response ->
+            when (response) {
+                is Resource.Success -> {
+                    binding.progressBar.visibility = View.GONE
+                    adapterCoffeeShops.submitList(response.data)
+                    val pointList =
+                        mutableListOf<Point>()
+                    response.data?.map {
+                        pointList.add(
+                            Point(
+                                it.point.latitude.toDouble(),
+                                it.point.longitude.toDouble()
+                            )
+                        )
+                    }
+
+                    val distance = Geo.distance(
+                        myLocation, pointList[0]
+                    )
+
+                    val distance2 = Geo.distance(
+                        myLocation, pointList[1]
+                    )
+
+                    val distance3 = Geo.distance(
+                        myLocation, pointList[2]
+                    )
+
+                    response.data?.let { viewModel.setDistance(it, response.data[0].id, distance) }
+                    adapterCoffeeShops.notifyItemChanged(0)
+
+                    response.data?.let { viewModel.setDistance(it, response.data[1].id, distance2) }
+                    adapterCoffeeShops.notifyItemChanged(1)
+
+                    response.data?.let { viewModel.setDistance(it, response.data[2].id, distance3) }
+                    adapterCoffeeShops.notifyItemChanged(2)
+                }
+
+                is Resource.Loading -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+
+                is Resource.Error -> {
+                    binding.progressBar.visibility = View.GONE
+                    Snackbar.make(view, "Error", Snackbar.LENGTH_SHORT).show()
+                }
+
             }
 
-            val distance = Geo.distance(
-                myLocation, pointList[0]
-            )
-
-            val distance2 = Geo.distance(
-                myLocation, pointList[1]
-            )
-
-            val distance3 = Geo.distance(
-                myLocation, pointList[2]
-            )
-
-            viewModel.setDistance(locationList, locationList[0].id, distance)
-            adapterCoffeeShops.notifyItemChanged(0)
-
-            viewModel.setDistance(locationList, locationList[1].id, distance2)
-            adapterCoffeeShops.notifyItemChanged(1)
-
-            viewModel.setDistance(locationList, locationList[2].id, distance3)
-            adapterCoffeeShops.notifyItemChanged(2)
 
         })
 

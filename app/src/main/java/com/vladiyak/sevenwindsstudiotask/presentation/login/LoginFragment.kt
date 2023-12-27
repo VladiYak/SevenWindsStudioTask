@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.gms.common.internal.safeparcel.SafeParcelable
+import com.google.android.material.snackbar.Snackbar
 import com.vladiyak.sevenwindsstudiotask.R
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
@@ -18,6 +19,7 @@ import com.vladiyak.sevenwindsstudiotask.databinding.FragmentLoginBinding
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentSignUpBinding
 import com.vladiyak.sevenwindsstudiotask.presentation.signup.SignUpFragment
 import com.vladiyak.sevenwindsstudiotask.presentation.signup.SignUpViewModel
+import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -51,11 +53,24 @@ class LoginFragment : Fragment() {
             val user = User(login, password)
             viewModel.login(user)
 
-            viewModel.token.observe(viewLifecycleOwner, Observer {
-                token.addToken(it)
-                val action =
-                    LoginFragmentDirections.actionLoginFragmentToNearbyCoffeeShopsFragment()
-                findNavController().navigate(action)
+            viewModel.token.observe(viewLifecycleOwner, Observer { response ->
+                when (response) {
+                    is Resource.Success -> {
+                        token.addToken(response.data)
+                        val action =
+                            LoginFragmentDirections.actionLoginFragmentToNearbyCoffeeShopsFragment()
+                        if (findNavController().currentDestination?.id == R.id.loginFragment) {
+                            findNavController().navigate(action)
+                        }
+                    }
+                    is Resource.Loading -> {
+
+                    }
+                    is Resource.Error -> {
+                        Snackbar.make(view, "Failed to login!", Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+
             })
         }
     }

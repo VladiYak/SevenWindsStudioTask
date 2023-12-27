@@ -5,25 +5,27 @@ import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeList
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
 import com.vladiyak.sevenwindsstudiotask.data.network.coffeeapi.CoffeeApiService
+import retrofit2.HttpException
+import retrofit2.Response
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(
     private val apiService: CoffeeApiService
 ) {
 
-    suspend fun getLocations(): LocationList {
+    suspend fun getLocations(): Response<LocationList> {
         return apiService.getLocationsList()
     }
 
-    suspend fun getLocationMenu(id: String): CoffeeList {
+    suspend fun getLocationMenu(id: String): Response<CoffeeList> {
         return apiService.getLocationMenu(id)
     }
 
-    suspend fun signUp(user: User): Token {
+    suspend fun signUp(user: User): Response<Token> {
         return apiService.signUp(user)
     }
 
-    suspend fun login(user: User): Token {
+    suspend fun login(user: User): Response<Token> {
         return apiService.login(user)
     }
 
