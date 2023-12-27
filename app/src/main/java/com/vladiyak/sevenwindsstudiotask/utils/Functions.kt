@@ -14,3 +14,7 @@ fun correctId(item: CoffeeItem): Int {
 }
 
 fun String.addSuffix(value: String) = this + value
+
+fun String.toKilometers(distance: Double) {
+    this.format("%.2f", distance)
+}

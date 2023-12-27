@@ -83,4 +83,6 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
 
     implementation("com.yandex.android:maps.mobile:4.1.0-full")
+
+    implementation ("com.google.android.gms:play-services-location:20.0.0")
 }
