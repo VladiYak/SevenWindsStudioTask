@@ -34,9 +34,9 @@ class CoffeeShopsViewHolder(
 
     private fun convert(item: LocationItem): String {
         return if (item.distance >= 1000) {
-            String.format("%.0f" + " " + "км", item.distance / 1000)
+            String.format("%.0f" + " " + "км от вас", item.distance / 1000)
         } else {
-            String.format("%.0f" + " " + "м", item.distance)
+            String.format("%.0f" + " " + "м от вас", item.distance)
         }
     }
 }

@@ -25,35 +25,38 @@
         app:layout_constraintEnd_toEndOf="parent"
         />
 
-    <TextView
-        android:id="@+id/coffee_text"
-        style="@style/TextAppearance.Material3.TitleMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Эспрессо"
-        android:textColor="#AF9479"
-        app:layout_constraintTop_toBottomOf="@id/image_coffee"
-        app:layout_constraintStart_toStartOf="parent"
-        android:layout_margin="8dp"/>
-
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <TextView
+            android:id="@+id/coffee_text"
+            style="@style/TextAppearance.Material3.TitleMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Эспрессо"
+            android:textColor="#AF9479"
+            android:textSize="15sp"
+            app:layout_constraintStart_toStartOf="@+id/linearLayoutCompat"
+            app:layout_constraintTop_toBottomOf="@id/image_coffee" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linearLayoutCompat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/coffee_text"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/coffee_text">
 
             <TextView
                 android:id="@+id/price"
+                style="@style/TextAppearance.Material3.TitleSmall"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/TextAppearance.Material3.TitleSmall"
+                android:layout_marginEnd="25dp"
                 android:text="500 руб"
-                android:textStyle="bold"
                 android:textColor="#846340"
-                android:layout_marginEnd="25dp"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/minus_button"
@@ -65,13 +68,14 @@
 
             <TextView
                 android:id="@+id/count"
+                style="@style/TextAppearance.Material3.BodyMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/TextAppearance.Material3.BodyMedium"
-                android:text="2"
-                android:textColor="#846340"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"/>
+                android:layout_marginTop="2dp"
+                android:layout_marginEnd="10dp"
+                android:text="2"
+                android:textColor="#846340" />
 
             <ImageView
                 android:id="@+id/plus_button"
