@@ -53,13 +53,9 @@ class LoginFragment : Fragment() {
 
             viewModel.token.observe(viewLifecycleOwner, Observer {
                 token.addToken(it)
-                if (it != null) {
-                    val action =
-                        LoginFragmentDirections.actionLoginFragmentToNearbyCoffeeShopsFragment(
-                            it
-                        )
-                    findNavController().navigate(action)
-                }
+                val action =
+                    LoginFragmentDirections.actionLoginFragmentToNearbyCoffeeShopsFragment()
+                findNavController().navigate(action)
             })
         }
     }
