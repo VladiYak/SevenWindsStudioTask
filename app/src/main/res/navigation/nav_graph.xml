@@ -80,5 +80,25 @@
         <argument
             android:name="cartitems"
             app:argType="com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem[]" />
+        <action
+            android:id="@+id/action_orderDetailsFragment_to_orderAcceptedFragment"
+            app:destination="@id/orderAcceptedFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"/>
+    </fragment>
+    <fragment
+        android:id="@+id/orderAcceptedFragment"
+        android:name="com.vladiyak.sevenwindsstudiotask.presentation.orderaccepted.OrderAcceptedFragment"
+        android:label="fragment_order_accepted"
+        tools:layout="@layout/fragment_order_accepted" >
+        <action
+            android:id="@+id/action_orderAcceptedFragment_to_nearbyCoffeeShopsFragment"
+            app:destination="@id/nearbyCoffeeShopsFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/slide_in"
+            app:popExitAnim="@anim/slide_out"/>
     </fragment>
 </navigation>

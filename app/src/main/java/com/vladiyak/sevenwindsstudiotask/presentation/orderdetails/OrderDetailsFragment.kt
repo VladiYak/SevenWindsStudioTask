@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
@@ -41,6 +42,10 @@ class OrderDetailsFragment : Fragment() {
         setupRecyclerViews()
         val cartItems = args.cartitems.toList()
         adapterOrderDetails.submitList(cartItems)
+        binding.buttonPay.setOnClickListener {
+            val action = OrderDetailsFragmentDirections.actionOrderDetailsFragmentToOrderAcceptedFragment()
+            findNavController().navigate(action)
+        }
     }
 
     private fun setupRecyclerViews() {
