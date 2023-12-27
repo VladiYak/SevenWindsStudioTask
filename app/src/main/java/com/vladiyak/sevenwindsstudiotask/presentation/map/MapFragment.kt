@@ -22,6 +22,8 @@ import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.location.LocationManager
 import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.IconStyle
+import com.yandex.mapkit.map.PlacemarkMapObject
+import com.yandex.mapkit.map.TextStyle
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
@@ -37,6 +39,8 @@ class MapFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentDetailBinding == null")
 
     private val viewModel: MapViewModel by viewModels()
+    private val placeMarkList = mutableListOf<PlacemarkMapObject>()
+
 
 
     override fun onCreateView(
@@ -84,6 +88,45 @@ class MapFragment : Fragment() {
                 pointList,
                 ImageProvider.fromResource(context, R.drawable.marker),
                 IconStyle()
+            ).forEach {
+                placeMarkList.add(it)
+            }
+
+            placeMarkList[0].setText(
+                locationList[0].name,
+                TextStyle(
+                    12f,
+                    R.color.textColor,
+                    R.color.textColor,
+                    TextStyle.Placement.BOTTOM,
+                    0.0f,
+                    true,
+                    false
+                )
+            )
+            placeMarkList[1].setText(
+                locationList[1].name,
+                TextStyle(
+                    12f,
+                    R.color.textColor,
+                    R.color.textColor,
+                    TextStyle.Placement.BOTTOM,
+                    0.0f,
+                    true,
+                    false
+                )
+            )
+            placeMarkList[2].setText(
+                locationList[2].name,
+                TextStyle(
+                    12f,
+                    R.color.textColor,
+                    R.color.textColor,
+                    TextStyle.Placement.BOTTOM,
+                    0.0f,
+                    true,
+                    false
+                )
             )
         })
 
