@@ -16,5 +16,5 @@
 ## Demo
 
 
-![Video](https://github.com/VladiYak95/SevenWindsStudioTask/blob/3b294add19a5a47540d3382992779310b0b621ec/app/src/main/res/raw/presentation_video.webm)
+![Video](https://github.com/VladiYak95/SevenWindsStudioTask/blob/9e144b0afbaf06936261fcb90962e38f72db5d2b/app/src/main/res/raw/presentation_video.mp4)
 
