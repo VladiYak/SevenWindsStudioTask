@@ -6,6 +6,7 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import com.vladiyak.sevenwindsstudiotask.databinding.ActivityMainBinding
+import com.vladiyak.sevenwindsstudiotask.utils.Constants
 import com.yandex.mapkit.MapKitFactory
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        MapKitFactory.setApiKey("3c3511b0-728c-4a85-ada4-7fa67b603ce9")
+        MapKitFactory.setApiKey(Constants.api_key)
         MapKitFactory.initialize(this)
 
         val navHostFragment = supportFragmentManager.findFragmentById(

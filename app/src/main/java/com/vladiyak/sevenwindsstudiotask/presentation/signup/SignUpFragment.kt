@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.vladiyak.sevenwindsstudiotask.R
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
 import com.vladiyak.sevenwindsstudiotask.utils.TokenInstance
@@ -49,13 +50,13 @@ class SignUpFragment : Fragment() {
             when (response) {
                 is Resource.Success -> {
                     tokenInstance.addToken(response.data)
-                    Snackbar.make(view, "Success!", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view, getString(R.string.sign_up_success), Snackbar.LENGTH_SHORT).show()
                 }
                 is Resource.Loading -> {
 
                 }
                 is Resource.Error -> {
-                    Snackbar.make(view, "Failed to sign up!", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view, getString(R.string.sign_up_error), Snackbar.LENGTH_SHORT).show()
                 }
             }
         })

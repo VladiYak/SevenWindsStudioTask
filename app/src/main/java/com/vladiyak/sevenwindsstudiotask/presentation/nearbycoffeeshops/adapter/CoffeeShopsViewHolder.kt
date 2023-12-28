@@ -6,8 +6,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationItem
 import com.vladiyak.sevenwindsstudiotask.databinding.CoffeeShopItemRvBinding
 import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerLocationItem
-import com.vladiyak.sevenwindsstudiotask.utils.toKilometers
-import dagger.hilt.android.lifecycle.HiltViewModel
 
 
 class CoffeeShopsViewHolder(

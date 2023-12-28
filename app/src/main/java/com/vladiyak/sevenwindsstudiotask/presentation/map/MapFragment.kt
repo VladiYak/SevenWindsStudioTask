@@ -58,9 +58,9 @@ class MapFragment : Fragment() {
 
         viewModel.getLocations()
 
-        var mapkit: MapKit = MapKitFactory.getInstance()
+        val mapkit: MapKit = MapKitFactory.getInstance()
         requestLocationPermission()
-        var userLocation = mapkit.createUserLocationLayer(binding.mapView.mapWindow)
+        val userLocation = mapkit.createUserLocationLayer(binding.mapView.mapWindow)
         userLocation.isVisible = true
         userLocation.isHeadingEnabled = true
         userLocation.isAutoZoomEnabled = true
@@ -148,7 +148,7 @@ class MapFragment : Fragment() {
 
                 }
                 is Resource.Error -> {
-                    Snackbar.make(view, "Error!", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view, getString(R.string.loading_error), Snackbar.LENGTH_SHORT).show()
                 }
             }
 

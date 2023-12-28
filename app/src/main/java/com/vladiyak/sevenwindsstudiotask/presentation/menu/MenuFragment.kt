@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.vladiyak.sevenwindsstudiotask.R
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentMenuBinding
 import com.vladiyak.sevenwindsstudiotask.presentation.menu.adapter.MenuAdapter
 import com.vladiyak.sevenwindsstudiotask.utils.Resource
@@ -85,7 +86,7 @@ class MenuFragment : Fragment() {
 
                 is Resource.Error -> {
                     binding.progressBar.visibility = View.GONE
-                    Snackbar.make(view, "Error!", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view, getString(R.string.loading_error), Snackbar.LENGTH_SHORT).show()
                 }
             }
 

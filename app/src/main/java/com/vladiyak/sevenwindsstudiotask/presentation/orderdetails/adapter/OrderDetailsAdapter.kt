@@ -31,7 +31,4 @@ class OrderDetailsAdapter(
         }
 
     }
-
-    var onPlusClick: ((CoffeeItem) -> Unit)? = null
-    var onMinusClick: ((CoffeeItem) -> Unit)? = null
 }
