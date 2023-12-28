@@ -1,13 +1,12 @@
 package com.vladiyak.sevenwindsstudiotask.presentation.login
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
-import com.vladiyak.sevenwindsstudiotask.data.repository.MainRepository
+import com.vladiyak.sevenwindsstudiotask.domain.MainRepository
 import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

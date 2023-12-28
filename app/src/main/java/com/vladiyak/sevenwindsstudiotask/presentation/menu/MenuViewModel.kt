@@ -1,13 +1,11 @@
 package com.vladiyak.sevenwindsstudiotask.presentation.menu
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
-import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeList
-import com.vladiyak.sevenwindsstudiotask.data.repository.MainRepository
+import com.vladiyak.sevenwindsstudiotask.domain.MainRepository
 import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import com.vladiyak.sevenwindsstudiotask.utils.correctId
 import dagger.hilt.android.lifecycle.HiltViewModel
