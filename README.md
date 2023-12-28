@@ -15,9 +15,6 @@
 - Glide
 ## Demo
 
-Insert gif or link to demo
 
-
-
-![Video](https://github.com/VladiYak95/SevenWindsStudioTask/blob/3b294add19a5a47540d3382992779310b0b621ec/app/src/main/res/raw/presentation.webm)
+![Video](https://github.com/VladiYak95/SevenWindsStudioTask/blob/3b294add19a5a47540d3382992779310b0b621ec/app/src/main/res/raw/presentation_video.webm)
 
