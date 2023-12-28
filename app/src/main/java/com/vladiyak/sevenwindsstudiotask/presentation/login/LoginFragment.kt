@@ -67,7 +67,7 @@ class LoginFragment : Fragment() {
 
                     }
                     is Resource.Error -> {
-                        Snackbar.make(view, "Failed to login!", Snackbar.LENGTH_SHORT).show()
+                        Snackbar.make(view, getString(R.string.login_error), Snackbar.LENGTH_SHORT).show()
                     }
                 }
 

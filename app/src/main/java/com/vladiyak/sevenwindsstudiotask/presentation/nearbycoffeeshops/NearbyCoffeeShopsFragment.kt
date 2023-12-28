@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.snackbar.Snackbar
+import com.vladiyak.sevenwindsstudiotask.R
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationItem
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentNearbyCoffeeShopsBinding
 import com.vladiyak.sevenwindsstudiotask.presentation.nearbycoffeeshops.adapter.CoffeeShopsAdapter
@@ -101,7 +102,7 @@ class NearbyCoffeeShopsFragment : Fragment() {
 
                 is Resource.Error -> {
                     binding.progressBar.visibility = View.GONE
-                    Snackbar.make(view, "Error", Snackbar.LENGTH_SHORT).show()
+                    Snackbar.make(view, getString(R.string.loading_error), Snackbar.LENGTH_SHORT).show()
                 }
 
             }
