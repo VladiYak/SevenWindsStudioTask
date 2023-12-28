@@ -6,7 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationList
-import com.vladiyak.sevenwindsstudiotask.data.repository.MainRepository
+import com.vladiyak.sevenwindsstudiotask.domain.MainRepository
 import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
