@@ -6,8 +6,8 @@ object TokenInstance {
 
     private var myToken: Token? = Token("", 0)
 
-    fun addToken(token: Token?): Token? {
-        myToken = token
+    fun addToken(token: String): Token? {
+        myToken?.token = token
         return myToken
     }
 

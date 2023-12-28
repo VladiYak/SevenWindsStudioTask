@@ -1,11 +1,16 @@
 package com.vladiyak.sevenwindsstudiotask.presentation.nearbycoffeeshops
 
 import android.Manifest
+import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -113,6 +118,10 @@ class NearbyCoffeeShopsFragment : Fragment() {
                 NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToMapFragment()
             findNavController().navigate(action)
         }
+
+        binding.buttonLogout.setOnClickListener {
+            showLogoutAlertDialog()
+        }
     }
 
     private fun setupRecyclerViews() {
@@ -155,6 +164,32 @@ class NearbyCoffeeShopsFragment : Fragment() {
             }
         }
 
+    }
+
+    private fun showLogoutAlertDialog() {
+        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        val view =
+            LayoutInflater.from(requireContext()).inflate(R.layout.logout_alert_dialog, null, false)
+        alertDialogBuilder.setView(view)
+
+        val alertDialog = alertDialogBuilder.create()
+
+        val btnNo = view.findViewById<Button>(R.id.btn_no)
+        val btnYes = view.findViewById<Button>(R.id.btn_yes)
+
+        btnNo.setOnClickListener {
+            alertDialog.dismiss()
+        }
+
+        btnYes.setOnClickListener {
+            alertDialog.dismiss()
+            val sharedPrefs = context?.getSharedPreferences("main", Context.MODE_PRIVATE)
+            sharedPrefs?.edit()?.remove("token")?.apply()
+            val action = NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToSignUpFragment()
+            findNavController().navigate(action)
+        }
+
+        alertDialog.show()
     }
 
 }

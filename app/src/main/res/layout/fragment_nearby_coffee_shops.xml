@@ -35,6 +35,16 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
+        <ImageView
+            android:id="@+id/button_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginEnd="10dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/baseline_logout_24" />
+
     </androidx.appcompat.widget.Toolbar>
 
     <com.google.android.material.divider.MaterialDivider

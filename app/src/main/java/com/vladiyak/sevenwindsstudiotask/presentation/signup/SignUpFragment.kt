@@ -10,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.vladiyak.sevenwindsstudiotask.R
-import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
 import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentSignUpBinding
 import com.vladiyak.sevenwindsstudiotask.utils.Resource
@@ -49,7 +48,7 @@ class SignUpFragment : Fragment() {
         viewModel.token.observe(viewLifecycleOwner, Observer { response ->
             when (response) {
                 is Resource.Success -> {
-                    tokenInstance.addToken(response.data)
+                    tokenInstance.addToken(response.data?.token ?: "0")
                     Snackbar.make(view, getString(R.string.sign_up_success), Snackbar.LENGTH_SHORT).show()
                 }
                 is Resource.Loading -> {
