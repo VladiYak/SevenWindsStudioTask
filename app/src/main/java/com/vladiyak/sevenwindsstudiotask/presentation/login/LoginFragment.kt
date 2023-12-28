@@ -1,5 +1,6 @@
 package com.vladiyak.sevenwindsstudiotask.presentation.login
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -25,6 +26,7 @@ class LoginFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentLoginBinding == null")
 
     private val viewModel by viewModels<LoginViewModel>()
+    private val sharedPrefs by lazy { context?.getSharedPreferences("main", Context.MODE_PRIVATE) }
 
 
     private val token = TokenInstance
@@ -34,12 +36,13 @@ class LoginFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        val editor = sharedPrefs?.edit()
 
         binding.loginButton.setOnClickListener {
             val login = binding.editTextEmail.text.toString().trim()
@@ -50,7 +53,9 @@ class LoginFragment : Fragment() {
             viewModel.token.observe(viewLifecycleOwner, Observer { response ->
                 when (response) {
                     is Resource.Success -> {
-                        token.addToken(response.data)
+                        token.addToken(response.data?.token ?: "0")
+                        editor?.putString("token", response.data?.token)
+                        editor?.apply()
                         val action =
                             LoginFragmentDirections.actionLoginFragmentToNearbyCoffeeShopsFragment()
                         if (findNavController().currentDestination?.id == R.id.loginFragment) {

@@ -5,6 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Token(
-    val token: String,
+    var token: String,
     val tokenLifetime: Int
 ): Parcelable
