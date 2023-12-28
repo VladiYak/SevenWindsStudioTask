@@ -15,6 +15,6 @@
 - Glide
 ## Demo
 
+https://github.com/VladiYak95/SevenWindsStudioTask/assets/122727585/cdd0f04f-e460-44a5-9386-a8e2ee680076
 
-![Video](https://github.com/VladiYak95/SevenWindsStudioTask/blob/9e144b0afbaf06936261fcb90962e38f72db5d2b/app/src/main/res/raw/presentation_video.mp4)
 
