@@ -1,33 +1,68 @@
 package com.vladiyak.sevenwindsstudiotask.presentation.signup
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vladiyak.sevenwindsstudiotask.data.models.signup.Token
-import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
-import com.vladiyak.sevenwindsstudiotask.domain.MainRepository
-import com.vladiyak.sevenwindsstudiotask.utils.Resource
+import com.vladiyak.sevenwindsstudiotask.data.models.signup.AuthState
+import com.vladiyak.sevenwindsstudiotask.domain.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.net.ConnectException
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val repository: MainRepository
+    private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _token = MutableLiveData<Resource<Token?>>()
-    val token: LiveData<Resource<Token?>> = _token
+    private val _uiEvent = Channel<SignUpUiEvent>()
+    val uiEvent = _uiEvent.receiveAsFlow()
 
-    fun signUp(user: User) {
+    init {
         viewModelScope.launch {
-            val response = repository.signUp(user)
-            if (response.isSuccessful) {
-                _token.postValue(Resource.Success(response.body()))
-            } else {
-                _token.postValue(Resource.Error(response.errorBody().toString()))
+            authRepository.state.first { it is AuthState.Authorized }
+
+            _uiEvent.send(SignUpUiEvent.NavigateToNearbyCoffeeShops)
+        }
+    }
+
+    fun signUp(email: String, password: String, passwordConfirmation: String) {
+        val validationErrorEvent = if (email.isBlank() || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            SignUpUiEvent.ErrorInvalidEmail
+        } else if (password.isBlank()) {
+            SignUpUiEvent.ErrorEmptyPassword
+        } else if (password != passwordConfirmation) {
+            SignUpUiEvent.ErrorPasswordsDoNotMatch
+        } else null
+
+        if (validationErrorEvent != null) {
+            viewModelScope.launch {
+                _uiEvent.send(validationErrorEvent)
+            }
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                val token = authRepository.signUp(email, password)
+            } catch (exception: Exception) {
+                val errorEvent = when (exception) {
+                    is ConnectException -> SignUpUiEvent.ErrorConnection
+                    is HttpException -> SignUpUiEvent.ErrorRequest
+                    is RuntimeException -> SignUpUiEvent.ErrorAccountIsTaken
+                    else -> {
+                        exception.printStackTrace()
+                        SignUpUiEvent.ErrorUnknown
+                    }
+                }
+
+                _uiEvent.send(errorEvent)
             }
         }
     }
 }
+

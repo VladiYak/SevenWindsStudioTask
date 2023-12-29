@@ -5,6 +5,7 @@ plugins {
     id("kotlin-parcelize")
     id("com.google.dagger.hilt.android")
     id("androidx.navigation.safeargs.kotlin")
+    id("com.google.devtools.ksp")
 }
 
 android {
@@ -82,7 +83,17 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3")
 
-    implementation("com.yandex.android:maps.mobile:4.1.0-full")
+    implementation("com.yandex.android:maps.mobile:4.5.0-lite")
 
     implementation ("com.google.android.gms:play-services-location:20.0.0")
+
+    implementation("androidx.room:room-runtime:2.5.1")
+    ksp("androidx.room:room-compiler:2.5.1")
+    implementation("androidx.room:room-ktx:2.5.1")
+
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+
+    implementation ("androidx.recyclerview:recyclerview:1.3.2")
+
+
 }

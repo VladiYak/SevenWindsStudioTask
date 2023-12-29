@@ -13,7 +13,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -28,6 +31,9 @@ import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import com.yandex.mapkit.geometry.Geo
 import com.yandex.mapkit.geometry.Point
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -39,8 +45,6 @@ class NearbyCoffeeShopsFragment : Fragment() {
 
     private val viewModel: NearbyCoffeeShopsViewModel by viewModels()
     private lateinit var adapterCoffeeShops: CoffeeShopsAdapter
-    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-    private var myLocation: Point = Point(0.0, 0.0)
 
 
     override fun onCreateView(
@@ -49,8 +53,6 @@ class NearbyCoffeeShopsFragment : Fragment() {
     ): View? {
         _binding = FragmentNearbyCoffeeShopsBinding.inflate(inflater, container, false)
 
-        fusedLocationProviderClient =
-            LocationServices.getFusedLocationProviderClient(requireActivity())
         return binding.root
     }
 
@@ -58,69 +60,57 @@ class NearbyCoffeeShopsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         requestUserPermission()
-        viewModel.getCoffeeShops()
+        observeData()
         setupRecyclerViews()
 
-        viewModel.coffeeShop.observe(viewLifecycleOwner, Observer { response ->
-            when (response) {
-                is Resource.Success -> {
-                    binding.progressBar.visibility = View.GONE
-                    adapterCoffeeShops.submitList(response.data)
-                    val pointList =
-                        mutableListOf<Point>()
-                    response.data?.map {
-                        pointList.add(
-                            Point(
-                                it.point.latitude.toDouble(),
-                                it.point.longitude.toDouble()
-                            )
-                        )
-                    }
-
-                    val distance = Geo.distance(
-                        myLocation, pointList[0]
-                    )
-
-                    val distance2 = Geo.distance(
-                        myLocation, pointList[1]
-                    )
-
-                    val distance3 = Geo.distance(
-                        myLocation, pointList[2]
-                    )
-
-                    response.data?.let { viewModel.setDistance(it, response.data[0].id, distance) }
-                    adapterCoffeeShops.notifyItemChanged(0)
-
-                    response.data?.let { viewModel.setDistance(it, response.data[1].id, distance2) }
-                    adapterCoffeeShops.notifyItemChanged(1)
-
-                    response.data?.let { viewModel.setDistance(it, response.data[2].id, distance3) }
-                    adapterCoffeeShops.notifyItemChanged(2)
-                }
-
-                is Resource.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-
-                is Resource.Error -> {
-                    binding.progressBar.visibility = View.GONE
-                    Snackbar.make(view, getString(R.string.loading_error), Snackbar.LENGTH_SHORT).show()
-                }
-
-            }
-
-
-        })
-
         binding.buttonMap.setOnClickListener {
-            val action =
-                NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToMapFragment()
-            findNavController().navigate(action)
+            lifecycleScope.launch {
+                viewModel.uiState.collectLatest {
+                    val action =
+                        NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToMapFragment(
+                            it.coffeeShops[0].id
+                        )
+                    if (findNavController().currentDestination?.id == R.id.nearbyCoffeeShopsFragment) {
+                        findNavController().navigate(action)
+                    }
+                }
+            }
         }
 
-        binding.buttonLogout.setOnClickListener {
-            showLogoutAlertDialog()
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.refreshAll()
+            viewModel.refreshCurrentLocation()
+            viewModel.getCoffeeShops()
+            binding.swipeRefresh.isRefreshing = false
+        }
+    }
+
+    private fun observeData() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.uiState.collectLatest { state ->
+                    adapterCoffeeShops.submitList(state.coffeeShops)
+                    state.isLoading.let {
+                        when (it) {
+                            true -> {
+                                binding.progressBar.visibility = View.VISIBLE
+                            }
+
+                            false -> {
+                                binding.progressBar.visibility = View.INVISIBLE
+                            }
+                        }
+                    }
+                    if (state.message.isNotEmpty()) {
+                        Snackbar.make(
+                            requireContext(),
+                            binding.layout,
+                            state.message,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
         }
     }
 
@@ -130,7 +120,7 @@ class NearbyCoffeeShopsFragment : Fragment() {
                 override fun onItemClick(coffeeShop: LocationItem) {
                     val action =
                         NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToMenuFragment(
-                            coffeeShop.id.toString()
+                            coffeeShop.id
                         )
                     findNavController().navigate(action)
                 }
@@ -153,17 +143,6 @@ class NearbyCoffeeShopsFragment : Fragment() {
             )
             return
         }
-
-        val location = fusedLocationProviderClient.lastLocation
-        location.addOnSuccessListener {
-            if (it != null) {
-                val latitude = it.latitude
-                val longitude = it.longitude
-
-                myLocation = Point(latitude, longitude)
-            }
-        }
-
     }
 
     private fun showLogoutAlertDialog() {
@@ -185,7 +164,8 @@ class NearbyCoffeeShopsFragment : Fragment() {
             alertDialog.dismiss()
             val sharedPrefs = context?.getSharedPreferences("main", Context.MODE_PRIVATE)
             sharedPrefs?.edit()?.remove("token")?.apply()
-            val action = NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToSignUpFragment()
+            val action =
+                NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToSignUpFragment()
             findNavController().navigate(action)
         }
 
