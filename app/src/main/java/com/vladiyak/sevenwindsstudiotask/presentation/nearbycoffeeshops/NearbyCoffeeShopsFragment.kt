@@ -64,9 +64,17 @@ class NearbyCoffeeShopsFragment : Fragment() {
         setupRecyclerViews()
 
         binding.buttonMap.setOnClickListener {
-            val action =
-                NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToMapFragment()
-            findNavController().navigate(action)
+            lifecycleScope.launch {
+                viewModel.uiState.collectLatest {
+                    val action =
+                        NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToMapFragment(
+                            it.coffeeShops[0].id
+                        )
+                    if (findNavController().currentDestination?.id == R.id.nearbyCoffeeShopsFragment) {
+                        findNavController().navigate(action)
+                    }
+                }
+            }
         }
 
         binding.swipeRefresh.setOnRefreshListener {
@@ -86,7 +94,6 @@ class NearbyCoffeeShopsFragment : Fragment() {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.uiState.collectLatest { state ->
                     adapterCoffeeShops.submitList(state.coffeeShops)
-                    Log.d("DataTest", "${state.coffeeShops}")
                     state.isLoading.let {
                         when (it) {
                             true -> {
@@ -117,7 +124,7 @@ class NearbyCoffeeShopsFragment : Fragment() {
                 override fun onItemClick(coffeeShop: LocationItem) {
                     val action =
                         NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToMenuFragment(
-                            coffeeShop.id.toString()
+                            coffeeShop.id
                         )
                     findNavController().navigate(action)
                 }

@@ -3,8 +3,17 @@ package com.vladiyak.sevenwindsstudiotask.data.local
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [CoffeeShopEntity::class], version = 2, exportSchema = false)
+@Database(
+    entities = [
+        CoffeeShopEntity::class,
+        MenuItemEntity::class,
+        CartItemEntity::class
+    ], version = 3, exportSchema = false
+)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun coffeeShopsDao(): CoffeeShopsDao
+    abstract fun cartDao(): CartDao
+    abstract fun menuDao(): MenuDao
+
 }

@@ -5,19 +5,28 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.vladiyak.sevenwindsstudiotask.R
+import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentMenuBinding
 import com.vladiyak.sevenwindsstudiotask.presentation.menu.adapter.MenuAdapter
+import com.vladiyak.sevenwindsstudiotask.utils.MenuItemInteractionListener
 import com.vladiyak.sevenwindsstudiotask.utils.Resource
+import com.vladiyak.sevenwindsstudiotask.utils.SnackBarAction
 import com.vladiyak.sevenwindsstudiotask.utils.correctId
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -29,7 +38,15 @@ class MenuFragment : Fragment() {
 
     private val viewModel: MenuViewModel by viewModels()
     private lateinit var adapterMenu: MenuAdapter
-    private val args: MenuFragmentArgs by navArgs()
+    private val interactionListener = object : MenuItemInteractionListener {
+        override fun onAdd(cartMenuItem: CoffeeItem, position: Int) {
+            viewModel.addToCart(cartMenuItem.id)
+        }
+
+        override fun onRemove(cartMenuItem: CoffeeItem, position: Int) {
+            viewModel.removeFromCart(cartMenuItem.id)
+        }
+    }
 
 
     override fun onCreateView(
@@ -45,64 +62,77 @@ class MenuFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.getCoffeeItem(args.id)
-
-
         setupRecyclerViews()
 
-        viewModel.coffeeItem.observe(viewLifecycleOwner, Observer { response ->
-            when (response) {
-                is Resource.Success -> {
-                    binding.progressBar.visibility = View.GONE
-                    adapterMenu.submitList(response.data)
-                    adapterMenu.onPlusClick = {
-                        response.data?.let { list -> viewModel.increaseQuantity(list, it) }
-                        adapterMenu.notifyItemChanged(correctId(it) - 1, Unit)
+        with(binding) {
+            swipeRefresh.setOnRefreshListener {
+                viewModel.refresh()
+            }
+            buttonArrowBack.setOnClickListener {
+                findNavController().navigateUp()
+            }
+            buttonPay.setOnClickListener {
+                val action = MenuFragmentDirections.actionMenuFragmentToOrderDetailsFragment()
+                findNavController().navigate(action)
+            }
+        }
 
-                    }
-                    adapterMenu.onMinusClick = {
-                        if (it.quantity > 0)
-                            response.data?.let { list -> viewModel.decreaseQuantity(list, it) }
-                        adapterMenu.notifyItemChanged(correctId(it) - 1, Unit)
-                    }
-
-                    val list = adapterMenu.currentList.toMutableList().filter {
-                        it.quantity > 0
-                    }
-
-                    binding.buttonPay.setOnClickListener {
-                        val action =
-                            MenuFragmentDirections.actionMenuFragmentToOrderDetailsFragment(
-                                list.toTypedArray()
-                            )
-                        findNavController().navigate(action)
-                    }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.uiState.collect(::handleUiState)
                 }
-
-                is Resource.Loading -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                }
-
-                is Resource.Error -> {
-                    binding.progressBar.visibility = View.GONE
-                    Snackbar.make(view, getString(R.string.loading_error), Snackbar.LENGTH_SHORT).show()
+                launch {
+                    viewModel.uiEvent.collect(::handleUiEvent)
                 }
             }
-
-
-        })
-
-
-        binding.buttonArrowBack.setOnClickListener {
-            findNavController().navigateUp()
         }
     }
 
+    private fun handleUiState(uiState: UiState) {
+        with(binding) {
+            swipeRefresh.isRefreshing = uiState.isLoading
+            buttonPay.isEnabled = uiState.canProceed
+        }
+        adapterMenu.submitList(uiState.menuItems)
+    }
+
+    private fun handleUiEvent(uiEvent: UiEvent) {
+        val action = SnackBarAction(getString(R.string.snackbar_retry)) {
+            viewModel.refresh()
+        }
+
+        when (uiEvent) {
+            UiEvent.ErrorConnection -> showSnackbar(
+                R.string.error_connection, action
+            )
+
+            UiEvent.ErrorLoading -> showSnackbar(
+                R.string.error_loading_menu, action
+            )
+        }
+    }
+
+
     private fun setupRecyclerViews() {
-        adapterMenu = MenuAdapter()
+        adapterMenu = MenuAdapter(interactionListener)
         binding.menuRv.adapter = adapterMenu
         binding.menuRv.layoutManager =
             GridLayoutManager(requireContext(), 2)
+    }
+
+    private fun showSnackbar(
+        @StringRes messageResId: Int,
+        snackbarAction: SnackBarAction? = null
+    ) {
+        Snackbar.make(
+            binding.root, messageResId, Snackbar.LENGTH_SHORT
+        ).apply {
+            anchorView = binding.buttonPay
+            snackbarAction?.let {
+                setAction(it.label, it.listener)
+            }
+        }.show()
     }
 
 }

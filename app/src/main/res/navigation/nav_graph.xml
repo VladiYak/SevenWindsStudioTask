@@ -58,7 +58,14 @@
         android:id="@+id/mapFragment"
         android:name="com.vladiyak.sevenwindsstudiotask.presentation.map.MapFragment"
         android:label="fragment_map"
-        tools:layout="@layout/fragment_map" />
+        tools:layout="@layout/fragment_map" >
+        <argument
+            android:name="id"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_mapFragment_to_menuFragment"
+            app:destination="@id/menuFragment" />
+    </fragment>
     <fragment
         android:id="@+id/menuFragment"
         android:name="com.vladiyak.sevenwindsstudiotask.presentation.menu.MenuFragment"
@@ -73,16 +80,13 @@
             app:popExitAnim="@anim/slide_out"/>
         <argument
             android:name="id"
-            app:argType="string" />
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/orderDetailsFragment"
         android:name="com.vladiyak.sevenwindsstudiotask.presentation.orderdetails.OrderDetailsFragment"
         android:label="fragment_order_details"
         tools:layout="@layout/fragment_order_details">
-        <argument
-            android:name="cartitems"
-            app:argType="com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem[]" />
         <action
             android:id="@+id/action_orderDetailsFragment_to_orderAcceptedFragment"
             app:destination="@id/orderAcceptedFragment"

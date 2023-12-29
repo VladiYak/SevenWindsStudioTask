@@ -1,73 +1,48 @@
-package com.vladiyak.sevenwindsstudiotask.presentation.menu
+package com.vladiyak.sevenwindsstudiotask.presentation.orderdetails
 
-import android.util.Log
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.data.repository.CartRepository
-import com.vladiyak.sevenwindsstudiotask.data.repository.MenuRepository
 import com.vladiyak.sevenwindsstudiotask.domain.usecase.GetCartMenuItemsUseCase
-import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.net.ConnectException
 import javax.inject.Inject
 
 @HiltViewModel
-class MenuViewModel @Inject constructor(
-    private val menuRepository: MenuRepository,
+class CartViewModel @Inject constructor(
     private val cartRepository: CartRepository,
-    private val getCartMenuItemsStream: GetCartMenuItemsUseCase,
-    savedStateHandle: SavedStateHandle
-) : ViewModel() {
-
-    private val args = MenuFragmentArgs.fromSavedStateHandle(savedStateHandle)
+    private val getCartMenuItemsStream: GetCartMenuItemsUseCase
+): ViewModel() {
 
     private val _uiState = MutableStateFlow(UiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _uiEvent = Channel<UiEvent>()
-    val uiEvent = _uiEvent.receiveAsFlow()
-
     init {
-        refresh()
         viewModelScope.launch {
-            cartRepository.deleteAll()
+            setLoadingState(true)
 
-            getCartMenuItemsStream(args.id).collectLatest { cartMenuItems ->
+            getCartMenuItemsStream().collectLatest { cartMenuItems ->
                 val canProceed = cartMenuItems.any { it.quantity > 0 }
+                val totalPrice = cartMenuItems.fold(0) { acc, cartMenuItem ->
+                    acc + cartMenuItem.price * cartMenuItem.quantity
+                }
                 _uiState.update {
                     it.copy(
                         isLoading = false,
                         canProceed = canProceed,
-                        menuItems = cartMenuItems
+                        isEmpty = cartMenuItems.isEmpty(),
+                        menuItems = cartMenuItems,
+                        totalPrice = totalPrice
                     )
                 }
             }
-        }
-    }
 
-    fun refresh() {
-        setLoadingState(true)
-
-        viewModelScope.launch {
-            try {
-                menuRepository.refreshById(args.id)
-            } catch (exception: Exception) {
-                val errorEvent = when (exception) {
-                    is ConnectException -> UiEvent.ErrorConnection
-                    else -> UiEvent.ErrorLoading
-                }
-                _uiEvent.send(errorEvent)
-                setLoadingState(false)
-            }
+            setLoadingState(false)
         }
     }
 
@@ -83,6 +58,12 @@ class MenuViewModel @Inject constructor(
         }
     }
 
+    fun clearCart() {
+        viewModelScope.launch {
+            cartRepository.deleteAll()
+        }
+    }
+
     private fun setLoadingState(isLoading: Boolean) {
         _uiState.update {
             it.copy(isLoading = isLoading)
@@ -93,10 +74,7 @@ class MenuViewModel @Inject constructor(
 data class UiState(
     val isLoading: Boolean = false,
     val canProceed: Boolean = false,
+    val isEmpty: Boolean = false,
     val menuItems: List<CoffeeItem> = emptyList(),
+    val totalPrice: Int = 0
 )
-
-sealed interface UiEvent {
-    data object ErrorConnection : UiEvent
-    data object ErrorLoading : UiEvent
-}

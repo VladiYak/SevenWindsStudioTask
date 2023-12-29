@@ -5,9 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.vladiyak.sevenwindsstudiotask.R
@@ -16,6 +21,7 @@ import com.vladiyak.sevenwindsstudiotask.databinding.FragmentLoginBinding
 import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import com.vladiyak.sevenwindsstudiotask.utils.TokenInstance
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -42,35 +48,76 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val editor = sharedPrefs?.edit()
+        with(binding) {
+            loginButton.setOnClickListener {
+                logIn()
+            }
 
-        binding.loginButton.setOnClickListener {
-            val login = binding.editTextEmail.text.toString().trim()
-            val password = binding.editTextPassword.text.toString().trim()
-            val user = User(login, password)
-            viewModel.login(user)
-
-            viewModel.token.observe(viewLifecycleOwner, Observer { response ->
-                when (response) {
-                    is Resource.Success -> {
-                        token.addToken(response.data?.token ?: "0")
-                        editor?.putString("token", response.data?.token)
-                        editor?.apply()
-                        val action =
-                            LoginFragmentDirections.actionLoginFragmentToNearbyCoffeeShopsFragment()
-                        if (findNavController().currentDestination?.id == R.id.loginFragment) {
-                            findNavController().navigate(action)
-                        }
-                    }
-                    is Resource.Loading -> {
-
-                    }
-                    is Resource.Error -> {
-                        Snackbar.make(view, getString(R.string.login_error), Snackbar.LENGTH_SHORT).show()
-                    }
+            editTextPassword.setOnEditorActionListener { _, actionId, _ ->
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    logIn()
+                    true
+                } else {
+                    false
                 }
-
-            })
+            }
         }
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.uiEvent.collect(::handleUiEvent)
+                }
+            }
+        }
+    }
+
+    private fun logIn() {
+        with(binding) {
+            val email = editTextEmail.text.toString()
+            val password = editTextPassword.text.toString()
+            viewModel.logIn(email, password)
+        }
+    }
+
+    private fun handleUiEvent(uiEvent: UiEvent) {
+        when (uiEvent) {
+            UiEvent.ErrorUnknown -> {
+                showSnackBar(R.string.error_unknown)
+            }
+
+            UiEvent.ErrorEmptyEmail -> {
+                showSnackBar(R.string.error_empty_email)
+            }
+
+            UiEvent.ErrorEmptyPassword -> {
+                showSnackBar(R.string.error_empty_password)
+            }
+
+            UiEvent.ErrorConnection -> {
+                showSnackBar(R.string.error_connection)
+            }
+
+            UiEvent.ErrorRequest -> {
+                showSnackBar(R.string.error_request)
+            }
+
+            UiEvent.ErrorInvalidCredentials -> {
+                showSnackBar(R.string.error_invalid_credentials)
+            }
+
+            UiEvent.NavigateToNearbyCoffeeShops -> {
+                val navController = findNavController()
+                navController.graph.setStartDestination(R.id.nearbyCoffeeShopsFragment)
+
+                val action = LoginFragmentDirections.actionLoginFragmentToNearbyCoffeeShopsFragment()
+                navController.navigate(action)
+            }
+        }
+    }
+
+
+    private fun showSnackBar(@StringRes resId: Int) {
+        Snackbar.make(binding.root, resId, Snackbar.LENGTH_SHORT).show()
     }
 }

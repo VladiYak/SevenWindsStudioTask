@@ -25,4 +25,12 @@ object DatabaseModule {
     @Singleton
     fun provideCoffeeShopsDao(appDatabase: AppDatabase) = appDatabase.coffeeShopsDao()
 
+    @Provides
+    @Singleton
+    fun provideCartDao(appDatabase: AppDatabase) = appDatabase.cartDao()
+
+    @Provides
+    @Singleton
+    fun provideMenuDao(appDatabase: AppDatabase) = appDatabase.menuDao()
+
 }

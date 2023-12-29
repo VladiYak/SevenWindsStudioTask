@@ -2,6 +2,8 @@ package com.vladiyak.sevenwindsstudiotask.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.vladiyak.sevenwindsstudiotask.data.local.AuthenticationManager
+import com.vladiyak.sevenwindsstudiotask.data.models.AuthState
 import com.vladiyak.sevenwindsstudiotask.data.network.coffeeapi.CoffeeApiService
 import com.vladiyak.sevenwindsstudiotask.utils.Constants
 import com.vladiyak.sevenwindsstudiotask.utils.TokenInstance
@@ -36,19 +38,25 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(): OkHttpClient {
+    fun provideOkHttpClient(authManager: AuthenticationManager): OkHttpClient {
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
-            .addInterceptor { apiKeyAsQuery(it) }
+            .addInterceptor { chain ->
+                val authState = authManager.state.value
+                val request = if (authState is AuthState.Authorized) {
+                    val newRequest = chain.request().newBuilder().apply {
+                        addHeader("Cache-Control", "no-cache")
+                        addHeader("Authorization", "Bearer ${authState.token}")
+                    }
+                    newRequest.build()
+                } else {
+                    chain.request()
+                }
+
+                return@addInterceptor chain.proceed(request)
+            }
             .build()
     }
-
-    private fun apiKeyAsQuery(chain: Interceptor.Chain) = chain.proceed(
-        chain.request()
-            .newBuilder()
-            .addHeader("Authorization", "Bearer ${TokenInstance.getToken()?.token}")
-            .build()
-    )
 }
