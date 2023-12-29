@@ -83,10 +83,6 @@ class NearbyCoffeeShopsFragment : Fragment() {
             viewModel.getCoffeeShops()
             binding.swipeRefresh.isRefreshing = false
         }
-
-        binding.buttonLogout.setOnClickListener {
-            showLogoutAlertDialog()
-        }
     }
 
     private fun observeData() {

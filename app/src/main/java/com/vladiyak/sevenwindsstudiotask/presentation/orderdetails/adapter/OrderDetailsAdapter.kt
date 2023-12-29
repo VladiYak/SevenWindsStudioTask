@@ -4,26 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.vladiyak.sevenwindsstudiotask.R
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.databinding.OrderItemRvBinding
 import com.vladiyak.sevenwindsstudiotask.utils.CartItemInteractionListener
-import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerMinusButton
-import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerPlusButton
 
 class OrderDetailsAdapter(
     private val interactionListener: CartItemInteractionListener? = null
-) : ListAdapter<CoffeeItem, CartItemViewHolder>(DiffCallback()) {
+) : ListAdapter<CoffeeItem, OrderDetailsViewHolder>(DiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderDetailsViewHolder {
         val binding = OrderItemRvBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return CartItemViewHolder(binding, interactionListener)
+        return OrderDetailsViewHolder(binding, interactionListener)
     }
 
-    override fun onBindViewHolder(holder: CartItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: OrderDetailsViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
     }

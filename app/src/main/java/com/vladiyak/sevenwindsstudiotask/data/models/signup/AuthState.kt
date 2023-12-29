@@ -1,4 +1,4 @@
-package com.vladiyak.sevenwindsstudiotask.data.models
+package com.vladiyak.sevenwindsstudiotask.data.models.signup
 
 sealed interface AuthState {
     data object Unauthorized : AuthState

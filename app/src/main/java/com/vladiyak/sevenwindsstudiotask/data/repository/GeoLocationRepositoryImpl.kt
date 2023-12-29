@@ -6,18 +6,19 @@ import android.location.Location
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import com.google.android.gms.tasks.CancellationTokenSource
+import com.vladiyak.sevenwindsstudiotask.domain.repository.GeoLocationRepository
 import com.vladiyak.sevenwindsstudiotask.utils.hasLocationPermission
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import javax.inject.Inject
 
-class GeoLocationRepository @Inject constructor(
+class GeoLocationRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
-) {
+): GeoLocationRepository {
 
     private val _currentLocation = MutableStateFlow(Location(null))
-    val currentLocation = _currentLocation.asStateFlow()
+    override val currentLocation = _currentLocation.asStateFlow()
 
     private val fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
 
@@ -26,7 +27,7 @@ class GeoLocationRepository @Inject constructor(
     }
 
     @SuppressLint("MissingPermission")
-    fun refreshCurrentLocation(withLastLocation: Boolean) {
+    override fun refreshCurrentLocation(withLastLocation: Boolean) {
         if (!context.hasLocationPermission()) return
 
         if (withLastLocation) {
@@ -47,7 +48,7 @@ class GeoLocationRepository @Inject constructor(
         }
     }
 
-    fun getDistanceToLocation(latitude: Double, longitude: Double): Float? {
+    override fun getDistanceToLocation(latitude: Double, longitude: Double): Float? {
         val location = _currentLocation.value
         if (location.provider == null) {
             return null

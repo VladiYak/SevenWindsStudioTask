@@ -115,6 +115,10 @@ class MapFragment : Fragment(R.layout.fragment_map) {
                 viewModel.uiState.collect(::handleUiState)
             }
         }
+
+        binding.buttonArrowBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
     override fun onDestroyView() {
@@ -161,7 +165,7 @@ class MapFragment : Fragment(R.layout.fragment_map) {
         }
     }
 
-    private fun handleUiState(uiState: UiState) {
+    private fun handleUiState(uiState: MapUiState) {
         uiState.moveCameraTo?.let {
             map?.move(
                 CameraPosition(

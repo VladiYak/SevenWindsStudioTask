@@ -9,11 +9,9 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.snackbar.Snackbar
 import com.vladiyak.sevenwindsstudiotask.R
@@ -21,11 +19,8 @@ import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentMenuBinding
 import com.vladiyak.sevenwindsstudiotask.presentation.menu.adapter.MenuAdapter
 import com.vladiyak.sevenwindsstudiotask.utils.MenuItemInteractionListener
-import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import com.vladiyak.sevenwindsstudiotask.utils.SnackBarAction
-import com.vladiyak.sevenwindsstudiotask.utils.correctId
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 
@@ -68,9 +63,6 @@ class MenuFragment : Fragment() {
             swipeRefresh.setOnRefreshListener {
                 viewModel.refresh()
             }
-            buttonArrowBack.setOnClickListener {
-                findNavController().navigateUp()
-            }
             buttonPay.setOnClickListener {
                 val action = MenuFragmentDirections.actionMenuFragmentToOrderDetailsFragment()
                 findNavController().navigate(action)
@@ -87,9 +79,13 @@ class MenuFragment : Fragment() {
                 }
             }
         }
+
+        binding.buttonArrowBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
     }
 
-    private fun handleUiState(uiState: UiState) {
+    private fun handleUiState(uiState: MenuUiState) {
         with(binding) {
             swipeRefresh.isRefreshing = uiState.isLoading
             buttonPay.isEnabled = uiState.canProceed
@@ -97,17 +93,17 @@ class MenuFragment : Fragment() {
         adapterMenu.submitList(uiState.menuItems)
     }
 
-    private fun handleUiEvent(uiEvent: UiEvent) {
+    private fun handleUiEvent(uiEvent: MenuUiEvent) {
         val action = SnackBarAction(getString(R.string.snackbar_retry)) {
             viewModel.refresh()
         }
 
         when (uiEvent) {
-            UiEvent.ErrorConnection -> showSnackbar(
+            MenuUiEvent.ErrorConnection -> showSnackbar(
                 R.string.error_connection, action
             )
 
-            UiEvent.ErrorLoading -> showSnackbar(
+            MenuUiEvent.ErrorLoading -> showSnackbar(
                 R.string.error_loading_menu, action
             )
         }

@@ -2,22 +2,23 @@ package com.vladiyak.sevenwindsstudiotask.data.repository
 
 import androidx.room.withTransaction
 import com.vladiyak.sevenwindsstudiotask.data.local.AppDatabase
-import com.vladiyak.sevenwindsstudiotask.data.local.CartDao
-import com.vladiyak.sevenwindsstudiotask.data.local.CartItemEntity
+import com.vladiyak.sevenwindsstudiotask.data.local.dao.CartDao
+import com.vladiyak.sevenwindsstudiotask.data.local.entity.CartItemEntity
+import com.vladiyak.sevenwindsstudiotask.domain.repository.CartRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class CartRepository @Inject constructor(
+class CartRepositoryImpl @Inject constructor(
     private val database: AppDatabase,
     private val cartDao: CartDao
-) {
+): CartRepository {
 
-   fun getAllStream(): Flow<List<CartItemEntity>> = cartDao.observeAll()
+   override fun getAllStream(): Flow<List<CartItemEntity>> = cartDao.observeAll()
 
-   fun getByIdsStream(idList: List<Int>): Flow<List<CartItemEntity>> =
+   override fun getByIdsStream(idList: List<Int>): Flow<List<CartItemEntity>> =
         cartDao.observeByIds(idList)
 
-   suspend fun add(menuItemId: Int) {
+   override suspend fun add(menuItemId: Int) {
         database.withTransaction {
             cartDao.getById(menuItemId)?.let {
                 cartDao.add(menuItemId)
@@ -27,7 +28,7 @@ class CartRepository @Inject constructor(
         }
     }
 
-   suspend fun remove(menuItemId: Int) {
+   override suspend fun remove(menuItemId: Int) {
         database.withTransaction {
             cartDao.getById(menuItemId)?.let {
                 if (it.count == 1) {
@@ -39,5 +40,5 @@ class CartRepository @Inject constructor(
         }
     }
 
-   suspend fun deleteAll() = cartDao.deleteAll()
+   override suspend fun deleteAll() = cartDao.deleteAll()
 }

@@ -1,10 +1,11 @@
 package com.vladiyak.sevenwindsstudiotask.data.repository
 
 import android.util.Log
-import com.vladiyak.sevenwindsstudiotask.data.local.CoffeeShopsDao
-import com.vladiyak.sevenwindsstudiotask.data.local.toEntity
+import com.vladiyak.sevenwindsstudiotask.data.local.dao.CoffeeShopsDao
+import com.vladiyak.sevenwindsstudiotask.data.local.entity.toEntity
 import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationItem
 import com.vladiyak.sevenwindsstudiotask.data.network.coffeeapi.CoffeeApiService
+import com.vladiyak.sevenwindsstudiotask.domain.repository.CoffeeShopsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import retrofit2.HttpException
@@ -13,10 +14,10 @@ import javax.inject.Inject
 class CoffeeShopsRepositoryImpl @Inject constructor(
     private val coffeeShopsDao: CoffeeShopsDao,
     private val apiService: CoffeeApiService,
-    private val geoLocationRepository: GeoLocationRepository
-) {
+    private val geoLocationRepository: GeoLocationRepositoryImpl
+): CoffeeShopsRepository {
 
-    suspend fun refreshAll() {
+    override suspend fun refreshAll() {
         geoLocationRepository.refreshCurrentLocation(true)
 
         val response = apiService.getLocationsList()
@@ -29,7 +30,7 @@ class CoffeeShopsRepositoryImpl @Inject constructor(
         Log.d("RepositoryRefreshAll", "$body")
     }
 
-    fun getCoffeeShopsStream(): Flow<List<LocationItem>> {
+    override fun getCoffeeShopsStream(): Flow<List<LocationItem>> {
 
         return coffeeShopsDao.observeAll()
             .combine(geoLocationRepository.currentLocation) { coffeeShopList, _ ->
@@ -43,7 +44,7 @@ class CoffeeShopsRepositoryImpl @Inject constructor(
             }
     }
 
-    suspend fun getCoffeeShopById(id: Int): LocationItem? {
+    override suspend fun getCoffeeShopById(id: Int): LocationItem? {
         return coffeeShopsDao.getById(id)?.run {
             val distance = geoLocationRepository.getDistanceToLocation(
                 point.latitude.toDouble(), point.longitude.toDouble()

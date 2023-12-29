@@ -20,7 +20,6 @@ object DatabaseModule {
     fun provideAppDatabase(@ApplicationContext context: Context) =
         Room.databaseBuilder(context, AppDatabase::class.java, "database")
             .fallbackToDestructiveMigration().build()
-
     @Provides
     @Singleton
     fun provideCoffeeShopsDao(appDatabase: AppDatabase) = appDatabase.coffeeShopsDao()

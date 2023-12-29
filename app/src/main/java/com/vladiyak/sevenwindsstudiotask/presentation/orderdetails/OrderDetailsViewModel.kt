@@ -2,8 +2,7 @@ package com.vladiyak.sevenwindsstudiotask.presentation.orderdetails
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
-import com.vladiyak.sevenwindsstudiotask.data.repository.CartRepository
+import com.vladiyak.sevenwindsstudiotask.data.repository.CartRepositoryImpl
 import com.vladiyak.sevenwindsstudiotask.domain.usecase.GetCartMenuItemsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,12 +13,12 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CartViewModel @Inject constructor(
-    private val cartRepository: CartRepository,
+class OrderDetailsViewModel @Inject constructor(
+    private val cartRepository: CartRepositoryImpl,
     private val getCartMenuItemsStream: GetCartMenuItemsUseCase
 ): ViewModel() {
 
-    private val _uiState = MutableStateFlow(UiState())
+    private val _uiState = MutableStateFlow(OrderDetailsUiState())
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -71,10 +70,3 @@ class CartViewModel @Inject constructor(
     }
 }
 
-data class UiState(
-    val isLoading: Boolean = false,
-    val canProceed: Boolean = false,
-    val isEmpty: Boolean = false,
-    val menuItems: List<CoffeeItem> = emptyList(),
-    val totalPrice: Int = 0
-)

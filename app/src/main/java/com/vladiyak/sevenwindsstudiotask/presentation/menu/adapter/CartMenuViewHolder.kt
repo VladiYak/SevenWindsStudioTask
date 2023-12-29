@@ -7,7 +7,7 @@ import com.vladiyak.sevenwindsstudiotask.databinding.MenuItemRvBinding
 import com.vladiyak.sevenwindsstudiotask.utils.MenuItemInteractionListener
 import com.vladiyak.sevenwindsstudiotask.utils.addSuffix
 
-class CartMenuItemViewHolder(
+class CartMenuViewHolder(
     private val binding: MenuItemRvBinding,
     private val interactionListener: MenuItemInteractionListener? = null
 ) : RecyclerView.ViewHolder(binding.root) {

@@ -12,20 +12,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.android.material.snackbar.Snackbar
 import com.vladiyak.sevenwindsstudiotask.R
-import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationItem
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentOrderDetailsBinding
-import com.vladiyak.sevenwindsstudiotask.presentation.nearbycoffeeshops.NearbyCoffeeShopsFragmentDirections
-import com.vladiyak.sevenwindsstudiotask.presentation.nearbycoffeeshops.adapter.CoffeeShopsAdapter
 import com.vladiyak.sevenwindsstudiotask.presentation.orderdetails.adapter.OrderDetailsAdapter
 import com.vladiyak.sevenwindsstudiotask.utils.CartItemInteractionListener
-import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerLocationItem
-import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerMinusButton
-import com.vladiyak.sevenwindsstudiotask.utils.OnClickListenerPlusButton
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -38,7 +30,7 @@ class OrderDetailsFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentOrderDetailsBinding == null")
 
     private lateinit var adapterOrderDetails: OrderDetailsAdapter
-    private val viewModel: CartViewModel by viewModels()
+    private val viewModel: OrderDetailsViewModel by viewModels()
 
 
     private val interactionListener = object : CartItemInteractionListener {
@@ -90,7 +82,7 @@ class OrderDetailsFragment : Fragment() {
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
     }
 
-    private fun handleUiState(uiState: UiState) {
+    private fun handleUiState(uiState: OrderDetailsUiState) {
         with(binding) {
             if (uiState.isLoading) {
                 progressBar.show()

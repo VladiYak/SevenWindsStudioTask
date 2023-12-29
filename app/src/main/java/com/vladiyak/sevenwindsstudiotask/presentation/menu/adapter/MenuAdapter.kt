@@ -4,25 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
 import com.vladiyak.sevenwindsstudiotask.databinding.MenuItemRvBinding
 import com.vladiyak.sevenwindsstudiotask.utils.MenuItemInteractionListener
-import com.vladiyak.sevenwindsstudiotask.utils.addSuffix
 
 class MenuAdapter(
     private val interactionListener: MenuItemInteractionListener? = null
-) : ListAdapter<CoffeeItem, CartMenuItemViewHolder>(DiffCallback()) {
+) : ListAdapter<CoffeeItem, CartMenuViewHolder>(DiffCallback()) {
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartMenuItemViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CartMenuViewHolder {
         val binding = MenuItemRvBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
-        return CartMenuItemViewHolder(binding, interactionListener)
+        return CartMenuViewHolder(binding, interactionListener)
     }
 
-    override fun onBindViewHolder(holder: CartMenuItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: CartMenuViewHolder, position: Int) {
         val item = getItem(position)
         holder.bind(item)
     }

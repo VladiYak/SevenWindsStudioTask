@@ -1,19 +1,14 @@
 package com.vladiyak.sevenwindsstudiotask.presentation.nearbycoffeeshops
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vladiyak.sevenwindsstudiotask.data.models.location.LocationItem
-import com.vladiyak.sevenwindsstudiotask.data.repository.CoffeeShopsRepositoryImpl
-import com.vladiyak.sevenwindsstudiotask.data.repository.GeoLocationRepository
+import com.vladiyak.sevenwindsstudiotask.domain.repository.CoffeeShopsRepository
+import com.vladiyak.sevenwindsstudiotask.domain.repository.GeoLocationRepository
 import com.vladiyak.sevenwindsstudiotask.domain.usecase.GetCoffeeShopsUseCase
 import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,12 +16,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class NearbyCoffeeShopsViewModel @Inject constructor(
-    private val repository: CoffeeShopsRepositoryImpl,
+    private val repository: CoffeeShopsRepository,
     private val geoLocationRepository: GeoLocationRepository,
     private val getGetCoffeeShopsUseCase: GetCoffeeShopsUseCase
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(UiState())
+    private val _uiState = MutableStateFlow(NearbyCoffeeShopsUiState())
     val uiState = _uiState.asStateFlow()
 
     init {

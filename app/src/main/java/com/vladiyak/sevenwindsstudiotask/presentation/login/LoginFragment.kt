@@ -10,15 +10,12 @@ import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.vladiyak.sevenwindsstudiotask.R
-import com.vladiyak.sevenwindsstudiotask.data.models.signup.User
 import com.vladiyak.sevenwindsstudiotask.databinding.FragmentLoginBinding
-import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import com.vladiyak.sevenwindsstudiotask.utils.TokenInstance
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -80,33 +77,33 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun handleUiEvent(uiEvent: UiEvent) {
+    private fun handleUiEvent(uiEvent: LoginUiEvent) {
         when (uiEvent) {
-            UiEvent.ErrorUnknown -> {
+            LoginUiEvent.ErrorUnknown -> {
                 showSnackBar(R.string.error_unknown)
             }
 
-            UiEvent.ErrorEmptyEmail -> {
+            LoginUiEvent.ErrorEmptyEmail -> {
                 showSnackBar(R.string.error_empty_email)
             }
 
-            UiEvent.ErrorEmptyPassword -> {
+            LoginUiEvent.ErrorEmptyPassword -> {
                 showSnackBar(R.string.error_empty_password)
             }
 
-            UiEvent.ErrorConnection -> {
+            LoginUiEvent.ErrorConnection -> {
                 showSnackBar(R.string.error_connection)
             }
 
-            UiEvent.ErrorRequest -> {
+            LoginUiEvent.ErrorRequest -> {
                 showSnackBar(R.string.error_request)
             }
 
-            UiEvent.ErrorInvalidCredentials -> {
+            LoginUiEvent.ErrorInvalidCredentials -> {
                 showSnackBar(R.string.error_invalid_credentials)
             }
 
-            UiEvent.NavigateToNearbyCoffeeShops -> {
+            LoginUiEvent.NavigateToNearbyCoffeeShops -> {
                 val navController = findNavController()
                 navController.graph.setStartDestination(R.id.nearbyCoffeeShopsFragment)
 

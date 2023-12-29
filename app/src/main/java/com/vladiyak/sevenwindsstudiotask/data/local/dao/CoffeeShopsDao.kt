@@ -1,9 +1,10 @@
-package com.vladiyak.sevenwindsstudiotask.data.local
+package com.vladiyak.sevenwindsstudiotask.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Upsert
+import com.vladiyak.sevenwindsstudiotask.data.local.entity.CoffeeShopEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

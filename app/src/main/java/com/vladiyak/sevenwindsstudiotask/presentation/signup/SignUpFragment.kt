@@ -67,37 +67,37 @@ class SignUpFragment : Fragment() {
         }
     }
 
-    private fun handleUiEvent(uiEvent: UiEvent) {
+    private fun handleUiEvent(uiEvent: SignUpUiEvent) {
         when (uiEvent) {
-            UiEvent.ErrorUnknown -> {
+            SignUpUiEvent.ErrorUnknown -> {
                 showSnackBar(R.string.error_unknown)
             }
 
-            UiEvent.ErrorInvalidEmail -> {
+            SignUpUiEvent.ErrorInvalidEmail -> {
                 showSnackBar(R.string.error_invalid_email)
             }
 
-            UiEvent.ErrorEmptyPassword -> {
+            SignUpUiEvent.ErrorEmptyPassword -> {
                 showSnackBar(R.string.error_empty_password)
             }
 
-            UiEvent.ErrorPasswordsDoNotMatch -> {
+            SignUpUiEvent.ErrorPasswordsDoNotMatch -> {
                 showSnackBar(R.string.error_passwords_do_not_match)
             }
 
-            UiEvent.ErrorConnection -> {
+            SignUpUiEvent.ErrorConnection -> {
                 showSnackBar(R.string.error_connection)
             }
 
-            UiEvent.ErrorRequest -> {
+            SignUpUiEvent.ErrorRequest -> {
                 showSnackBar(R.string.error_request)
             }
 
-            UiEvent.ErrorAccountIsTaken -> {
+            SignUpUiEvent.ErrorAccountIsTaken -> {
                 showSnackBar(R.string.error_account_is_taken)
             }
 
-            UiEvent.NavigateToNearbyCoffeeShops -> {
+            SignUpUiEvent.NavigateToNearbyCoffeeShops -> {
                 val navController = findNavController()
                 navController.graph.setStartDestination(R.id.nearbyCoffeeShopsFragment)
 

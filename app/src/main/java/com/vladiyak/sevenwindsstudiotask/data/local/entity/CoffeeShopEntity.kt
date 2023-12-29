@@ -1,4 +1,4 @@
-package com.vladiyak.sevenwindsstudiotask.data.local
+package com.vladiyak.sevenwindsstudiotask.data.local.entity
 
 import androidx.room.Embedded
 import androidx.room.Entity

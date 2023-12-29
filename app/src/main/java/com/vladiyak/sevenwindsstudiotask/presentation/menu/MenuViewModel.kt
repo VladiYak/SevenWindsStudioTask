@@ -1,14 +1,11 @@
 package com.vladiyak.sevenwindsstudiotask.presentation.menu
 
-import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
-import com.vladiyak.sevenwindsstudiotask.data.repository.CartRepository
-import com.vladiyak.sevenwindsstudiotask.data.repository.MenuRepository
+import com.vladiyak.sevenwindsstudiotask.data.repository.CartRepositoryImpl
+import com.vladiyak.sevenwindsstudiotask.domain.repository.MenuRepository
 import com.vladiyak.sevenwindsstudiotask.domain.usecase.GetCartMenuItemsUseCase
-import com.vladiyak.sevenwindsstudiotask.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -23,17 +20,17 @@ import javax.inject.Inject
 @HiltViewModel
 class MenuViewModel @Inject constructor(
     private val menuRepository: MenuRepository,
-    private val cartRepository: CartRepository,
+    private val cartRepository: CartRepositoryImpl,
     private val getCartMenuItemsStream: GetCartMenuItemsUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val args = MenuFragmentArgs.fromSavedStateHandle(savedStateHandle)
 
-    private val _uiState = MutableStateFlow(UiState())
+    private val _uiState = MutableStateFlow(MenuUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val _uiEvent = Channel<UiEvent>()
+    private val _uiEvent = Channel<MenuUiEvent>()
     val uiEvent = _uiEvent.receiveAsFlow()
 
     init {
@@ -62,8 +59,8 @@ class MenuViewModel @Inject constructor(
                 menuRepository.refreshById(args.id)
             } catch (exception: Exception) {
                 val errorEvent = when (exception) {
-                    is ConnectException -> UiEvent.ErrorConnection
-                    else -> UiEvent.ErrorLoading
+                    is ConnectException -> MenuUiEvent.ErrorConnection
+                    else -> MenuUiEvent.ErrorLoading
                 }
                 _uiEvent.send(errorEvent)
                 setLoadingState(false)
@@ -90,13 +87,5 @@ class MenuViewModel @Inject constructor(
     }
 }
 
-data class UiState(
-    val isLoading: Boolean = false,
-    val canProceed: Boolean = false,
-    val menuItems: List<CoffeeItem> = emptyList(),
-)
 
-sealed interface UiEvent {
-    data object ErrorConnection : UiEvent
-    data object ErrorLoading : UiEvent
-}
+

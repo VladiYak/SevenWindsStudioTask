@@ -1,4 +1,4 @@
-package com.vladiyak.sevenwindsstudiotask.data.local
+package com.vladiyak.sevenwindsstudiotask.data.local.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

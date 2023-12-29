@@ -2,21 +2,16 @@ package com.vladiyak.sevenwindsstudiotask.domain.usecase
 
 import android.util.Log
 import com.vladiyak.sevenwindsstudiotask.data.models.menu.CoffeeItem
-import com.vladiyak.sevenwindsstudiotask.data.repository.CartRepository
-import com.vladiyak.sevenwindsstudiotask.data.repository.MenuRepository
-import com.vladiyak.sevenwindsstudiotask.utils.Resource
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.vladiyak.sevenwindsstudiotask.data.repository.CartRepositoryImpl
+import com.vladiyak.sevenwindsstudiotask.data.repository.MenuRepositoryImpl
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class GetCartMenuItemsUseCase @Inject constructor(
-    private val menuRepository: MenuRepository,
-    private val cartRepository: CartRepository
+    private val menuRepository: MenuRepositoryImpl,
+    private val cartRepository: CartRepositoryImpl
 ) {
 
     operator fun invoke(coffeeShopId: Int = 0): Flow<List<CoffeeItem>> {
