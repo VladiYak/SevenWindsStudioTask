@@ -5,5 +5,5 @@ data class LocationItem(
     val id: Int,
     val name: String,
     val point: Point,
-    var distance: Double
+    var distance: Double?
 )

@@ -29,10 +29,6 @@ class LoginFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentLoginBinding == null")
 
     private val viewModel by viewModels<LoginViewModel>()
-    private val sharedPrefs by lazy { context?.getSharedPreferences("main", Context.MODE_PRIVATE) }
-
-
-    private val token = TokenInstance
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -49,7 +45,6 @@ class LoginFragment : Fragment() {
             loginButton.setOnClickListener {
                 logIn()
             }
-
             editTextPassword.setOnEditorActionListener { _, actionId, _ ->
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     logIn()
@@ -57,6 +52,10 @@ class LoginFragment : Fragment() {
                 } else {
                     false
                 }
+            }
+            signUpButton.setOnClickListener {
+                val action = LoginFragmentDirections.actionLoginFragmentToSignUpFragment()
+                findNavController().navigate(action)
             }
         }
 

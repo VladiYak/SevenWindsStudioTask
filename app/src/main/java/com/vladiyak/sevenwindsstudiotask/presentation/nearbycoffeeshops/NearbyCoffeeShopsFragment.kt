@@ -63,6 +63,7 @@ class NearbyCoffeeShopsFragment : Fragment() {
         observeData()
         setupRecyclerViews()
 
+
         binding.buttonMap.setOnClickListener {
             lifecycleScope.launch {
                 viewModel.uiState.collectLatest {
@@ -144,34 +145,6 @@ class NearbyCoffeeShopsFragment : Fragment() {
             return
         }
     }
-
-    private fun showLogoutAlertDialog() {
-        val alertDialogBuilder = AlertDialog.Builder(requireContext())
-        val view =
-            LayoutInflater.from(requireContext()).inflate(R.layout.logout_alert_dialog, null, false)
-        alertDialogBuilder.setView(view)
-
-        val alertDialog = alertDialogBuilder.create()
-
-        val btnNo = view.findViewById<Button>(R.id.btn_no)
-        val btnYes = view.findViewById<Button>(R.id.btn_yes)
-
-        btnNo.setOnClickListener {
-            alertDialog.dismiss()
-        }
-
-        btnYes.setOnClickListener {
-            alertDialog.dismiss()
-            val sharedPrefs = context?.getSharedPreferences("main", Context.MODE_PRIVATE)
-            sharedPrefs?.edit()?.remove("token")?.apply()
-            val action =
-                NearbyCoffeeShopsFragmentDirections.actionNearbyCoffeeShopsFragmentToSignUpFragment()
-            findNavController().navigate(action)
-        }
-
-        alertDialog.show()
-    }
-
 }
 
 

@@ -44,4 +44,10 @@
     <string name="error_loading_coffee_shops">Не удалось загрузить кофейни.</string>
     <string name="error_loading_menu">Не удалось загрузить меню.</string>
     <string name="pay">Оплатить (%1$d ₽)</string>
+    <string name="meters">м</string>
+    <string name="kilometers">км</string>
+    <string name="distance_to_me">%1$s от вас</string>
+    <string name="unknown_distance">Ошибка в определении расстояния</string>
+
+
 </resources>
